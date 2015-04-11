@@ -318,3 +318,7 @@ a.show{
     background-size: 72px 72px;
   }
 }
+pre {
+	#font-size: 12px;
+	#color: #FFF;
+}
