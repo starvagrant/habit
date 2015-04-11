@@ -14,7 +14,7 @@ body {
   /* Responsive page rules at bottom of style sheet */
 
 h1 {
-  background-image: url(kinglogo.png);
+  background-image: url('../images/kinglogo.png');
   background-repeat: no-repeat;
   background-position: center center;
   text-align: center;
@@ -70,7 +70,7 @@ li {
 
 li a {
   color: #fff;
-  background-image: url('icon-link.png');
+  background-image: url('../images/icon-link.png');
   background-position: right, center;
   background-repeat: no-repeat;
   text-decoration: none;
@@ -78,6 +78,12 @@ li a {
 
 li.complete a {
   background-image: none;}
+ 
+li button {
+  color: #000;
+  background-color: #999
+  font-size: 14px;
+}	
 
 p {
   background-color: #fff;
@@ -265,7 +271,7 @@ a.show{
   body {
       background-color: #403c3b;
   }
-  #page {
+#page {
     max-width: 480px;
   }
 }
