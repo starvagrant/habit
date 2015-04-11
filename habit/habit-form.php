@@ -136,7 +136,7 @@ echo <<<_DOCUMENT
 <html>
   <head>
     <title>habits.php</title>
-<!--    <link rel="stylesheet" href="habit-form.css" /> -->
+	<link rel="stylesheet" href="habit-form.css" /> 
   </head>
   <body>
     <div id="page">
@@ -146,7 +146,7 @@ echo <<<_DOCUMENT
 		<ul id="completion">
 <!-- putting top four habit items up front -->
 _DOCUMENT;
-
+/*
 print_dump($sql_array);
 print_dump($query_error);
 print_dump($query_sql);
@@ -154,12 +154,14 @@ print_dump($query_sql);
 //print_dump($complete_item);
 //print_dump($priority_item);
 //print_dump($habits);
-print_dump($habit_multi_array);
+//print_dump($habit_multi_array);
 print_dump($update_item);
-
+ */
 	if ($error) echo "<li>$error</li>";
 
 	$form_item = 0;
+
+	echo "<div id=\"left\">\n"; // echo left div
 	$rows1 = $r1->num_rows; 
 	for ($i = 0; $i < $rows1; $i++)
 	{
@@ -167,7 +169,6 @@ print_dump($update_item);
 		$list1[$i] = $r1->fetch_array(MYSQLI_ASSOC);
 		$score = $list1[$i]['priority'] * $list1[$i]['completion'];
 		echo <<<_LIST_ITEMS
-
 		<li>
 			<label>Habit:<input type="text" name="habit$form_item" class="default" value = "{$list1[$i]['habit_name']}"/></label>
 			<label>Complete?<input type="checkbox" name="complete$form_item" value="completed" class="default" /></label>
@@ -177,8 +178,10 @@ print_dump($update_item);
 _LIST_ITEMS;
 		$form_item++;
 	} // end for
+	echo "</div>\n"; 	// close left div
 	$r1->close();
 
+	echo "<div id=\"center\">\n"; // echo center div
 	$rows2 = $r2->num_rows; 
 	for ($i = 0; $i < $rows2; $i++)
 	{
@@ -186,7 +189,6 @@ _LIST_ITEMS;
 		$list2[$i] = $r2->fetch_array(MYSQLI_ASSOC);
 		$score = $list2[$i]['priority'] * $list2[$i]['completion'];
 		echo <<<_LIST_ITEMS
-
 		<li>
 			<label>Habit:<input type="text" name="habit$form_item" class="default" value = "{$list2[$i]['habit_name']}"/></label>
 			<label>Complete?<input type="checkbox" name="complete$form_item" value="completed" class="default" /></label>
@@ -196,8 +198,10 @@ _LIST_ITEMS;
 _LIST_ITEMS;
 		$form_item++;
 	} // end for
+	echo "</div>\n"; 	// close center div
 	$r2->close();
 
+	echo "<div id=\"right\">\n"; // echo right div
 	$rows3 = $r3->num_rows; 
 	for ($i = 0; $i < $rows3; $i++)
 	{
@@ -205,7 +209,6 @@ _LIST_ITEMS;
 		$list3[$i] = $r3->fetch_array(MYSQLI_ASSOC);
 		$score = $list3[$i]['priority'] * $list3[$i]['completion'];
 		echo <<<_LIST_ITEMS
-
 		<li>
 			<label>Habit:<input type="text" name="habit$form_item" class="default" value = "{$list3[$i]['habit_name']}"/></label>
 			<label>Complete?<input type="checkbox" name="complete$form_item" value="completed" class="default" /></label>
@@ -215,14 +218,14 @@ _LIST_ITEMS;
 _LIST_ITEMS;
 		$form_item++;
 	} // end for
+
+	echo "</div>"; 		// close right div
 	$r3->close();
 
 echo <<<_END
-				<li>			
 					<button id="add">Add</button>
 					<button type="submit">Submit</button>
-				</li>
-	</ul>
+	
 </form>
 </div>
 <script src="js/jquery-1.11.0.js"></script>

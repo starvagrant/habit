@@ -5,8 +5,26 @@ body {
   font-family: 'Oswald', 'Futura', sans-serif;
   margin: 0; 
   padding: 0;}
-#priority {
-	display:none;
+
+#left {
+  float: left;
+  width: 32%;
+  margin-right: 1%;
+  border: 1px green solid;
+}
+
+#center {
+  float: left;
+  width: 32%;
+  margin-right: 1%;
+  border: 1px green solid;
+}
+
+#right {
+  float: left;
+  width: 32%;
+  margin-right: 1%;
+  border: 1px green solid;
 }	
 #page {
   background-color: #403c3b;
@@ -161,14 +179,14 @@ label {
   color: #fff;
   display: block;
   margin: 10px 0 10px 0;
-  font-size: 16px;}
+  font-size: 12px;}
 
 input[type='text'], input[type='password'], textarea {
   background-color: #999;
   color: #333;
-  font-size: 16px;
-  width: 60%;
-  padding: 4px 6px;
+  font-size: 12px;
+  width: 80%;
+  padding: 2px 3px;
   border: 1px solid #000;
   border-radius: 8px;}
 
@@ -180,7 +198,7 @@ input[type='submit'], a.add, button, a.show {
   padding: 8px 10px;
   margin-top: 10px;
   font-family: 'Oswald', 'Futura', sans-serif;
-  font-size: 18px;
+  font-size: 14px;
   text-decoration: none;
   text-transform: uppercase;}
 
@@ -210,7 +228,7 @@ textarea {
   line-height: 1.4em;}
 
 select, option {
-  font-size: 16px;}
+  font-size: 12px;}
 
 #feedback, #termsHint {
   color: #fff;
@@ -231,7 +249,7 @@ label.selectbox {
 
 label.checkbox {
   display: inline;
-  font-size: 16px;}
+  font-size: 12px;}
 
 /* Link to show list */
 h2 a {
