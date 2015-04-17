@@ -10,11 +10,17 @@
 		<h1 id="header">List</h1>
 		<h2>Buy groceries</h2>
 		<form action="groceries.php" method="post">
-			<ul>
+			<ul id="grocery-list">
 				<li id="one" class="hot"><input type="text" readonly="readonly" value="fresh figs" class="default" /></li>
 				<li id="two" class="hot"><input type="text" readonly="readonly" value="pine nuts" class="default" /></li>
 				<li id="three" class="hot"><input type="text" readonly="readonly" value="honey" class="default" /></li>
 				<li id="four"><input type="text" readonly="readonly" value="balsamic vinegar" class="default" /></li>
+<!--
+				<li id="one" class="hot"><input type="text" disabled="disabled" value="fresh figs" class="food-item" /></li>
+				<li id="two" class="hot"><input type="text" disabled="disabled"  value="pine nuts" class="food-item" /></li>
+				<li id="three" class="hot"><input type="text" disabled="disabled"  value="honey" class="food-item" /></li>
+				<li id="four"><input type="text" disabled="disabled" value="balsamic vinegar" class="food-item" /></li>
+-->
 				<li>
 					<input type="text" id="adder" /> 
 					<button id="add-button">Add!</button>
