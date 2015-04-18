@@ -15,13 +15,14 @@ if ($_POST)
 	{
 		$r_name->data_seek($i);
 		$habits_row = $r_name->fetch_assoc();
-		$habit_multi_array[] = $habits_row;
-		$habits[] = $habits_row['habit_name'];
+		$habit_multi_array[] = $habits_row;		// why habits in two arrays?
+		$habits[] = $habits_row['habit_name'];		// why habits in two arrays?
 	} // end for
 	$r_name->close();
 
 /*	LOOP THROUGH THE 10 POST ITEMS					*/
 
+/*	IT IS HARD TO READ THE FOLLOWING CODE, THINK ABOUT ADHERING TO A CODING STANDARD	*/
 	for ($i = 0; $i < 10; $i++)
 	{
 		$habit_item[$i] = strtolower(get_sanit_post($c, "habit$i"));
@@ -45,57 +46,43 @@ if ($_POST)
 		$update_item[$i] = in_array($habit_item[$i], $habits); 
 	} // end for
 
+/*	I SHOULD NOT BE WRITING EIGHT INDEPENDENT SQL STATEMENTS THAT ALL NEED HEREDOCS
+ *	I SHOULD ALSO NOT BE PUTTING THEM INTO COMPLICATED IF / THEN / ELSE STRUCTURES */
 	for ($i = 0; $i < 10; $i++)
 	{
 		if($update_item[$i])
 		{
 			if ($complete_item[$i] && $priority_item[$i]) 		// if complete/prioritized
 			{
-			$sql = <<<_SQL
-				UPDATE tracker SET priority=priority+1, completion=completion+1
-				WHERE habit_name="{$habit_item[$i]}";
-_SQL;
+				$sql = "UPDATE tracker SET priority=priority+1, completion=completion+1
+					WHERE habit_name=\"{$habit_item[$i]}\"; ";
 			} else if ($complete_item[$i]) {			// if complete 
-				$sql = <<<_SQL
-					UPDATE tracker SET priority=priority-1, completion=completion+1
-					WHERE habit_name="{$habit_item[$i]}";
-_SQL;
+				$sql = "UPDATE tracker SET priority=priority-1, completion=completion+1
+					WHERE habit_name=\"{$habit_item[$i]}\"; ";
 			} else if ($priority_item[$i]) {			// if prioritized
-				$sql= <<<_SQL
-					UPDATE tracker SET priority=priority+1, completion=completion-1 
-					WHERE habit_name="{$habit_item[$i]}";
-_SQL;
+				$sql= "UPDATE tracker SET priority=priority+1, completion=completion-1 
+					WHERE habit_name=\"{$habit_item[$i]}\"; ";
 			} else { 						// item is not prioritized/completed
-				$sql = <<<_SQL
-					UPDATE tracker SET priority=priority-1, completion=completion-1 
-					WHERE habit_name="{$habit_item[$i]}";
-_SQL;
+				$sql = "UPDATE tracker SET priority=priority-1, completion=completion-1 
+					WHERE habit_name=\"{$habit_item[$i]}\"; ";
 			} // end inner if
 		} else {							// if update item is false
 			
 			if ($complete_item[$i] && $priority_item[$i]) 		// if complete/prioritized
 			{
-				$sql = <<<_SQL
-					INSERT INTO tracker (habit_name, insert_date, priority, completion)
-					VALUES ("{$habit_item[$i]}", now(), 10, 1); 
-_SQL;
+				$sql = "INSERT INTO tracker (habit_name, insert_date, priority, completion)
+					VALUES (\"{$habit_item[$i]}\", now(), 10, 1); ";
 			} else if ($complete_item[$i]) {			// if complete 
-				$sql = <<<_SQL
-					INSERT INTO tracker (habit_name, insert_date, priority, completion)
-					VALUES ("{$habit_item[$i]}", now(), 1, 1); 
-_SQL;
+				$sql = "INSERT INTO tracker (habit_name, insert_date, priority, completion)
+					VALUES (\"{$habit_item[$i]}\", now(), 1, 1); ";
 			} else if ($priority_item[$i]) {			// if prioritized
-				$sql = <<<_SQL
-					INSERT INTO tracker (habit_name, insert_date, priority, completion)
-					VALUES ("{$habit_item[$i]}", now(), 10, 0); 
+				$sql = "INSERT INTO tracker (habit_name, insert_date, priority, completion)
+					VALUES (\"{$habit_item[$i]}\", now(), 10, 0); ";
 
-_SQL;
 			} else { 						// item is not prioritized/completed
-				$sql = <<<_SQL
-					INSERT INTO tracker (habit_name, insert_date, priority, completion)
-					VALUES ("{$habit_item[$i]}", now(), 1, 0); 
+				$sql = "INSERT INTO tracker (habit_name, insert_date, priority, completion)
+					VALUES (\"{$habit_item[$i]}\", now(), 1, 0); ";
 
-_SQL;
 			} // end inner if
 		} // end if
 
@@ -113,9 +100,14 @@ _SQL;
 	} // end for
 } // end if	
 
-	$sql_sel1 = "SELECT `habit_name`, `priority`, `completion` from tracker ORDER BY priority DESC LIMIT 2;";		       
-	$sql_sel2 = "SELECT `habit_name`, `priority`, `completion` from tracker ORDER BY completion, priority DESC LIMIT 6;";
-	$sql_sel3 = "SELECT `habit_name`, `priority`, `completion` from tracker ORDER BY completion DESC LIMIT 2;";		       
+/*		SELECTING THREE TYPES OF HABITS: ordered by priority, completion, and both */
+	$sql_sel1 =	"SELECT `habit_name`, `priority`, `completion` from tracker
+				ORDER BY priority DESC LIMIT 2;";   
+	$sql_sel2 = 	"SELECT `habit_name`, `priority`, `completion` from tracker 
+				ORDER BY completion, priority DESC LIMIT 6;";
+	$sql_sel3 =	"SELECT `habit_name`, `priority`, `completion` from tracker
+				ORDER BY completion DESC LIMIT 2;";  
+
 	$r1 = $c->query($sql_sel1);
 	$r2 = $c->query($sql_sel2);
 	$r3 = $c->query($sql_sel3);
@@ -130,7 +122,7 @@ _SQL;
 		$error = $e->getMessage();
 	}	
 
-
+	/*			USING HEREDOCS TO PRINT OUT LARGE AMOUNTS OF HTML SEEMS LIKE BAD PRACTICE	*/
 echo <<<_DOCUMENT
 <!DOCTYPE html>
 <html>
@@ -146,34 +138,34 @@ echo <<<_DOCUMENT
 		<ul id="completion">
 <!-- putting top four habit items up front -->
 _DOCUMENT;
+
+/******* variables: $sql_array, $query_error, $query_sql, $habit_item, $complete_item, priority_item, habits,
+ * and habit_multi_array. What do they mean? *************/
 /*
-print_dump($sql_array);
-print_dump($query_error);
-print_dump($query_sql);
-//print_dump($habit_item);
-//print_dump($complete_item);
-//print_dump($priority_item);
-//print_dump($habits);
-//print_dump($habit_multi_array);
-print_dump($update_item);
+print_dump($sql_array); print_dump($query_error); print_dump($query_sql); //print_dump($habit_item); //print_dump($complete_item); //print_dump($priority_item); //print_dump($habits); //print_dump($habit_multi_array); print_dump($update_item);
  */
 	if ($error) echo "<li>$error</li>";
 
 	$form_item = 0;
 
-	echo "<div id=\"left\">\n"; // echo left div
+	echo "<div id=\"left\">\n"; 	// echo left div is nesting a div around a li element inside a ul element
+					// invalid html is likely the result
 	$rows1 = $r1->num_rows; 
 	for ($i = 0; $i < $rows1; $i++)
 	{
 		$r1->data_seek($i);
 		$list1[$i] = $r1->fetch_array(MYSQLI_ASSOC);
 		$score = $list1[$i]['priority'] * $list1[$i]['completion'];
+	
+		/*	CODE LOOKS LIKE CRAP WHY DO I NEED TO ADD CLASS DEFAULT TO MY LIST ITEMS?
+		 *	IT ISN'T In My CSS Class 	*/
+
 		echo <<<_LIST_ITEMS
 		<li>
-			<label>Habit:<input type="text" name="habit$form_item" class="default" value = "{$list1[$i]['habit_name']}"/></label>
-			<label>Complete?<input type="checkbox" name="complete$form_item" value="completed" class="default" /></label>
-			<label>More Priority?<input type="checkbox" name="priority$form_item" value="priority" class="default" /></label>
-			<label><input type="hidden" name="score$form_item" class="default" value="$score"/></label>
+			<label>Habit:<input type="text" name="habit$form_item" value = "{$list1[$i]['habit_name']}"/></label>
+			<label>Complete?<input type="checkbox" name="complete$form_item" value="completed" /></label>
+			<label>More Priority?<input type="checkbox" name="priority$form_item" value="priority" /></label>
+			<label><input type="hidden" name="score$form_item" value="$score"/></label>
 		</li>
 _LIST_ITEMS;
 		$form_item++;
@@ -190,10 +182,10 @@ _LIST_ITEMS;
 		$score = $list2[$i]['priority'] * $list2[$i]['completion'];
 		echo <<<_LIST_ITEMS
 		<li>
-			<label>Habit:<input type="text" name="habit$form_item" class="default" value = "{$list2[$i]['habit_name']}"/></label>
-			<label>Complete?<input type="checkbox" name="complete$form_item" value="completed" class="default" /></label>
-			<label>More Priority?<input type="checkbox" name="priority$form_item" value="priority" class="default" /></label>
-			<label><input type="hidden" name="score$form_item" value="$score" class="default" /></label>
+			<label>Habit:<input type="text" name="habit$form_item" value = "{$list2[$i]['habit_name']}"/></label>
+			<label>Complete?<input type="checkbox" name="complete$form_item" value="completed" /></label>
+			<label>More Priority?<input type="checkbox" name="priority$form_item" value="priority" /></label>
+			<label><input type="hidden" name="score$form_item" value="$score" /></label>
 		</li>
 _LIST_ITEMS;
 		$form_item++;
@@ -210,10 +202,10 @@ _LIST_ITEMS;
 		$score = $list3[$i]['priority'] * $list3[$i]['completion'];
 		echo <<<_LIST_ITEMS
 		<li>
-			<label>Habit:<input type="text" name="habit$form_item" class="default" value = "{$list3[$i]['habit_name']}"/></label>
-			<label>Complete?<input type="checkbox" name="complete$form_item" value="completed" class="default" /></label>
-			<label>More Priority?<input type="checkbox" name="priority$form_item" value="priority" class="default" /></label>
-			<label><input type="hidden" name="score$form_item" class="default" value="$score"/></label>
+			<label>Habit:<input type="text" name="habit$form_item" value = "{$list3[$i]['habit_name']}"/></label>
+			<label>Complete?<input type="checkbox" name="complete$form_item" value="completed" /></label>
+			<label>More Priority?<input type="checkbox" name="priority$form_item" value="priority" /></label>
+			<label><input type="hidden" name="score$form_item" value="$score"/></label>
 		</li>
 _LIST_ITEMS;
 		$form_item++;
@@ -243,4 +235,13 @@ function print_dump($var)
 function get_sanit_post($connection, $var){
 	        return htmlentities($connection->real_escape_string($_POST[$var]));
 }
+
+// WISH LIST  
+/*	IT IS HARD TO READ THE FOLLOWING CODE, THINK ABOUT ADHERING TO A CODING STANDARD	*/
+/*	I SHOULD NOT BE WRITING EIGHT INDEPENDENT SQL STATEMENTS THAT ALL NEED HEREDOCS
+ *	I SHOULD ALSO NOT BE PUTTING THEM INTO COMPLICATED IF / THEN / ELSE STRUCTURES */
+/*			USING HEREDOCS TO PRINT OUT LARGE AMOUNTS OF HTML SEEMS LIKE BAD PRACTICE	*/
+/*	CODE LOOKS LIKE CRAP WHY DO I NEED TO ADD CLASS DEFAULT TO MY LIST ITEMS? ***** FINISHED *****
+ *	DON'T NEED CLASS DEFAULT ON MY INPUT ITEMS ***** FINISHED *****
+ */
 ?>

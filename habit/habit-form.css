@@ -169,6 +169,9 @@ em.seasonal
   background-repeat: no-repeat;
   padding-left: 30px;}
 
+.float-right {
+  float: right;
+}
 
 /* FORM STYLES */
 
@@ -185,7 +188,7 @@ input[type='text'], input[type='password'], textarea {
   background-color: #999;
   color: #333;
   font-size: 12px;
-  width: 80%;
+  width: 60%;
   padding: 2px 3px;
   border: 1px solid #000;
   border-radius: 8px;}
