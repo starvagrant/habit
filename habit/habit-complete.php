@@ -17,6 +17,7 @@ if(isset($_GET)) {
 
 	ob_end_clean();
 }
+print("this is a response");
 /*
 <!DOCTYPE html>
 <html lang="en-us">

@@ -12,10 +12,6 @@ function print_dump($var)
 	var_dump($var);
 	echo "</pre>\n";
 }
-	$sql_sel1 = "SELECT `habit_name`, `priority`, `completion` from tracker ORDER BY priority DESC LIMIT 2;";		       
-	$sql_sel2 = "SELECT `habit_name`, `priority`, `completion` from tracker ORDER BY completion, priority DESC LIMIT 6;";
-	$sql_sel3 = "SELECT `habit_name`, `priority`, `completion` from tracker ORDER BY completion DESC LIMIT 2;";		       
-	
 function query_habit_database($string_to_sql, $number) {
 	global $connection; // connection object
 	switch($string_to_sql) {
@@ -87,7 +83,7 @@ if ($_POST){
 		}
 		$habit_name = $_POST["habit$i"];
 		
-		($statement->execute();
+		$statement->execute();
 		$i++;
 	} // end while
 } // end if($_POST) 

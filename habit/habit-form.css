@@ -34,7 +34,7 @@ body {
   /* Responsive page rules at bottom of style sheet */
 
 h1 {
-  background-image: url(kinglogo.png);
+/*  background-image: url(kinglogo.png); */
   background-repeat: no-repeat;
   background-position: center center;
   text-align: center;
@@ -86,7 +86,7 @@ li {
   text-align: left;
 /*  height: 50px; */
   padding-left: 1em;
-  padding-top: 10px;}
+}
 
 li a {
   color: #fff;
@@ -299,7 +299,8 @@ a.show{
   position: fixed;
   bottom: 20px;
   right: -235px;
-  text-transform: uppercase;}
+  text-transform: uppercase;
+}
 
 #footer {
   background:none;
@@ -340,6 +341,6 @@ a.show{
   }
 }
 pre {
-	#font-size: 12px;
-	#color: #FFF;
+	font-size: 12px;
+	color: #FFF;
 }

@@ -95,48 +95,38 @@
 
 <script>
 	var serializedData;
-	var $form = $('form#habit.complete');
-	
-	$form.on('submit', this, serializedData, function(event) {
+	var $form = $('form#habit-complete');
+
+	$form.on('submit', null, serializedData, function(event) {
+		event.preventDefault();
 		console.log("where's my error? 0");
+		console.log(serializedData);
+//		console.log(event);
+//		console.log("where's my error? 0");
 		var request;
-		var dataForAjax = event.data;	
-		var whatIsThis = this;
 	
-		if (request) { request.abort(); console.log("where's my error? 1"); } // abort if request is already present 	
+		if (request) { request.abort(); } // abort if request is already present 	
 
 		// serialized data passed through function call
 		request = $.ajax({
 			url: "habit-complete.php",
 			type: "post",
-			data: dataForAjax
+			data: serializedData
 		});
 
-		if (request) { console.log("where's my error? 2"); } // abort if request is already present 	
+//		if (request) { console.log("where's my error? 2"); } // abort if request is already present 	
 
 		// curious as to what these are	
 		request.done(function(response, textStatus, jqueryXHR) {
-			/*
 			console.log(response);
 			console.log(textStatus);
-			console.log(jqueryXHR);
-			*/
-			console.log("where's my error? 3"); 
-			console.log('success');
-			console.log(this);
-			console.log(whatIsThis);
 		});
 
 		request.fail(function(response, textStatus, jqueryXHR) {
-			console.log("where's my error? 4"); 
-			console.log('fail');
-			console.log(this);
-			console.log(whatIsThis);
+			console.log(textStatus);
 		});
 
 		// prevent form submission
-		e.preventDefault();
-		console.log("where's my error? 4"); 
 	});
 
 	$checkboxes = $('input[type=checkbox]');
@@ -146,12 +136,18 @@
 		// put data in serialized string
 		serializedData = $(this).siblings().serialize( "input" );
 		console.log(serializedData);
-		if( $form.submit(serializedData) ) {
-			console.log('submitted');
-		} else {
-			console.log('failed');
+		$form.submit();
+		/*
+		var boole;
+		if( boole = (function() {$form.submit(serializedData)}() ));
+	       	{
+			console.log("submitted");
+			console.log("failed");
 		}
+		*/
 	});
+
+	$form.submit();
 
 </script>
 <!--    <script src="js/basic-example.js"></script> -->
