@@ -98,8 +98,8 @@
 	var $form = $('form#habit-complete');
 
 	$form.on('submit', null, serializedData, function(event) {
+		// prevent form submission
 		event.preventDefault();
-		console.log("where's my error? 0");
 		console.log(serializedData);
 //		console.log(event);
 //		console.log("where's my error? 0");
@@ -126,29 +126,17 @@
 			console.log(textStatus);
 		});
 
-		// prevent form submission
 	});
 
 	$checkboxes = $('input[type=checkbox]');
 	$checkboxes.on('change', function(e){ 
 		console.log('yoyoyo');
 		$(this).parent().parent().hide(); 
-		// put data in serialized string
+		// put data in global serialized string $form.submit will use
 		serializedData = $(this).siblings().serialize( "input" );
 		console.log(serializedData);
 		$form.submit();
-		/*
-		var boole;
-		if( boole = (function() {$form.submit(serializedData)}() ));
-	       	{
-			console.log("submitted");
-			console.log("failed");
-		}
-		*/
 	});
 
-	$form.submit();
-
 </script>
-<!--    <script src="js/basic-example.js"></script> -->
 </body>
