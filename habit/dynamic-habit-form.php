@@ -1,13 +1,15 @@
 <?php
 require 'login.php';
-
 $dsn = 'mysql:host=localhost;dbname=habit';
-$pdo = new PDO($dsn, $db_username, $db_password);
+
+try { $pdo = new PDO($dsn, $db_username, $db_password); }
+catch (PDOException $e) { $error = $e->getMessage(); die("$error"); }
+
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 $sql_select = "SELECT habit_name from habit_tracker LIMIT 10; ";
-
 $result_statement = $pdo->query($sql_select);
+
 while($row = $result_statement->fetch()){
 	$habit[] = $row[0];			// add all habits to an array
 }
@@ -17,8 +19,8 @@ function make_list_item($habit, $number){
 $list = <<<_LIST
 	<li>
 		<label>Habit:<input type="text" name="habit$number" value = "$habit" />
-			<input type="checkbox" name="complete$number" value="completed" />
-			<input type="checkbox" name="priority$number" value="priority" checked="checked" />
+			<input type="checkbox" name="complete$number" value="1" />
+			<input type="checkbox" name="priority$number" value="1" checked="checked" />
 		</label>
 	</li>	
 
@@ -46,6 +48,7 @@ echo $list;
 	</form>
 <script>
 $( document ).ready( function(){
+	console.log('yoyoyo');
 	var serializedData;
 	var $form = $('form#habit-complete');
 
@@ -54,10 +57,6 @@ $( document ).ready( function(){
 
 		// prevent form submission
 		console.log("begin ajax");
-		console.log(serializedData);
-		console.log(event);
-		console.log(this);
-		console.log($(this));
 
 		var request;
 	
@@ -71,13 +70,14 @@ $( document ).ready( function(){
 		});
 
 		// curious as to what these are	
-		request.done(function(response, textStatus, jqueryXHR) {
-			console.log(response);
+		request.done(function(textStatus, response, jqueryXHR) {
+//			console.log(jqueryXHR);
 			console.log(textStatus);
 		});
 
-		request.fail(function(response, textStatus, jqueryXHR) {
+		request.fail(function(jqueryXHR, response, textStatus) {
 			console.log(textStatus);
+//			console.log(jqueryXHR);
 		});
 
 		console.log("end ajax");
@@ -86,13 +86,13 @@ $( document ).ready( function(){
 	$checkboxes = $('input[type=checkbox]');
 	$checkboxes.on('change', function(e){ 
 		console.log('yoyoyo');
-		$(this).parent().parent().hide(); 
 		// put data in global serialized string $form.submit will use
-		serializedData = $(this).siblings().serialize( "input" );
+		serializedData = $(this).parent().children().serialize( "input" );
 		console.log(serializedData);
 //		$('form#habit-complete').trigger("submit");
 //		$form.trigger("submit");	
 		$form.submit();	
+		$(this).parent().parent().hide(); 
 	}); // end onclick
 }); // end jquery's on ready function
 </script>

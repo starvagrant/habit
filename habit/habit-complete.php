@@ -27,8 +27,8 @@ if (isset($_POST["priority$number"])){
 // habit, complete, priority assigned
 
 $sql_update = "UPDATE habit_tracker SET completion = completion + ? , priority = priority + ? WHERE habit_name=?; ";
-if(!$statement = $pdo->prepare($sql_update)) print ("statement not prepared");
-if(!$statement->execute(array($priority, $complete, $habit))) print(" statement not executed ");
+if( !$statement = $pdo->prepare($sql_update) ) print ("statement not prepared");
+if( !$statement->execute(array($priority, $complete, $habit)) ) print(" statement not executed ");
 
 } // end POST processing
 ?>
