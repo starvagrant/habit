@@ -61,7 +61,7 @@ echo $list;
 <head>
 
 <title>dynamichabits.php</title>
-<link rel="stylesheet" href="habit-form.css" />
+<link rel="stylesheet" href="css/habit-form.css" />
 <script src="jquery-1.11.0.js"></script>
 <meta charset="utf-8">
 
