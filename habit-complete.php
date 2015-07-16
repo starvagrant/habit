@@ -50,7 +50,7 @@ foreach ($sql_array as $key => $array){
 	if( !$statement->execute($array) )  $ajax .= "\n" . $statement->errorCode() . " execute problem" ;
 }
 
-if ($pdo->errorCode !== null) $ajax .= "\n" . $pdo->errorCode . " db handle problem";
+if ($pdo->errorCode !== null) $ajax .= "\n" . $pdo->errorCode() . " db handle problem";
 echo $ajax;
 
 } // end POST processing

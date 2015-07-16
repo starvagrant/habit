@@ -99,27 +99,22 @@ li a {
 li.complete a {
   background-image: none;}
 
-/*
 label {
-  float: left;
-  clear: left;
   background-color: #ec8b68;
   color: #fff;
   border-top: 1px solid #fe9772;
   border-bottom: 1px solid #9f593f;
-  font-size: 24px;
+  font-size: 18px;
   letter-spacing: .05em;
   text-shadow: 2px 2px 1px #9f593f;
   text-align: left;
-  height: 50px;
   padding-left: 1em;
-  padding-top: 10px;}
+  }
 
 button {
 	float: left;
 	clear: left;
 }
-*/
 
 p {
   background-color: #fff;
@@ -131,26 +126,23 @@ p {
   border-radius: 5px;
   text-align: center;}
 
-.hot {
+.high {
   background-color: #d7666b;
   color: #fff;
   text-shadow: 2px 2px 1px #914141;
   border-top: 1px solid #e99295;
   border-bottom: 1px solid #914141;}
 
-.cool {
+.normal {
   background-color: #6cc0ac;
   color: #fff;
   text-shadow: 2px 2px 1px #3b6a5e;
   border-top: 1px solid #7ee0c9;
   border-bottom: 1px solid #3b6a5e;}
 
-.complete {
+.low {
   background-color: #999;
   color: #fff;
-  background-image: url("../images/icon-trash.png");
-  background-position: right, center;
-  background-repeat: no-repeat;
   border-top: 1px solid #666;
   border-bottom: 1px solid #b0b0b0;
   text-shadow: 2px 2px 1px #333;}
@@ -178,17 +170,11 @@ em.seasonal
 form {
   padding: 0 20px 20px 20px;}
 
-label {
-  color: #fff;
-  display: block;
-  margin: 10px 0 10px 0;
-  font-size: 12px;}
 
 input[type='text'], input[type='password'], textarea {
   background-color: #999;
   color: #333;
   font-size: 12px;
-  width: 60%;
   padding: 2px 3px;
   border: 1px solid #000;
   border-radius: 8px;}
