@@ -14,9 +14,10 @@ function get_habit_urgency_css_classname($completion, $priority) {
 
 	// css class name for list item
 	$urgency = $completion / $priority;
-	if ($urgency > 1) {
+	if ($urgency > 0.85) $urgency = 0.85;
+	if ($urgency > 0.70) {
 		$css_class_name = "low";
-	} else if ($urgency < 1 && $urgency > 0.5){
+	} else if ($urgency < 0.70 && $urgency > 0.40){
 		$css_class_name = "normal";
 	} else {
 		$css_class_name = "high";
@@ -31,6 +32,7 @@ function get_habit_date($leveled_up_date){
 }
 
 function get_habit_score($completion, $priority, $habit_level) {
+	if ($completion == 0) $completion++;
 	$habit_score = 8 * ($priority / $completion) * ((128 - $habit_level) / 128);
 	$habit_score = (int)$habit_score;
 	return $habit_score;
@@ -60,7 +62,7 @@ function push_db_rows_to_global_habit_array($query){
 $sql_select1 = "SELECT h.habit_id, h.habit_name, h.priority, h.completion,
 				s.habit_level, s.habit_experience, s.leveled_up_date
 				FROM habit_tracker as h INNER JOIN habit_score as s ON h.habit_id=s.habit_id
-				ORDER BY h.priority DESC LIMIT 4; ";
+				ORDER BY h.priority DESC LIMIT 4 ";
 $sql_select2 = "SELECT h.habit_id, h.habit_name, h.priority, h.completion,
 				s.habit_level, s.habit_experience, s.leveled_up_date
 				FROM habit_tracker as h INNER JOIN habit_score as s ON h.habit_id=s.habit_id
@@ -68,7 +70,7 @@ $sql_select2 = "SELECT h.habit_id, h.habit_name, h.priority, h.completion,
 $sql_select3 = "SELECT h.habit_id, h.habit_name, h.priority, h.completion,
 				s.habit_level, s.habit_experience, s.leveled_up_date
 				FROM habit_tracker as h INNER JOIN habit_score as s ON h.habit_id=s.habit_id
-				ORDER BY h.update_date DESC LIMIT 3; ";
+				ORDER BY h.update_date ASC LIMIT 3; ";
 
 try {
 
@@ -85,21 +87,25 @@ function make_list_item($habit_array, $number){
 // $habit is a value for form submission, $number is the numbered item
 $list = <<<_LIST
 	<li>
-		<label class="{$habit_array["urgency"]}">{$habit_array["habit_name"]}:
-			<input type="hidden" name="habit$number" value = "{$habit_array["habit_id"]}" />
-			<input type="checkbox" name="complete$number" value="1" />
-			<input type="checkbox" name="priority$number" value="1" checked="checked" />
-			<input type="hidden" name="score$number" value = "{$habit_array["score"]}" />
-			<input type="hidden" name="date$number" value = "{$habit_array["leveled_up_date"]}" />
-			<input type="hidden" name="exp$number" value = "{$habit_array["habit_experience"]}" />
-			<input type="hidden" name="level$number" value = "{$habit_array["habit_level"]}" />
-		<span class="level"> <u>level</u>: {$habit_array["habit_level"]}</span>
-		<span class="level"> <u>exp</u>: {$habit_array["habit_experience"]} /128 </span>
-		<span class="level"> <u>exp gained</u>: {$habit_array["score"]}</span>
-		<span class="level"> <u>last leveled on</u>: {$habit_array["leveled_date"]}</span>
+		<label class="{$habit_array["urgency"]}">
+				<span class="start">{$habit_array["habit_name"]}:</span>
+
+				<input type="hidden" name="habit$number" value = "{$habit_array["habit_id"]}" />
+				<input type="checkbox" name="complete$number" value="1" />
+				<input type="checkbox" name="priority$number" value="1" checked="checked" />
+				<input type="hidden" name="score$number" value = "{$habit_array["score"]}" />
+				<input type="hidden" name="date$number" value = "{$habit_array["leveled_up_date"]}" />
+				<input type="hidden" name="exp$number" value = "{$habit_array["habit_experience"]}" />
+				<input type="hidden" name="level$number" value = "{$habit_array["habit_level"]}" />
+
+				<span class="level"> <u>level</u>: {$habit_array["habit_level"]}</span>
+				<span class="level"> <u>exp</u>: {$habit_array["habit_experience"]} /128 </span>
+				<span class="level"> <u>points</u>: {$habit_array["score"]}</span>
+				<span class="end level"> <u>last level</u>: {$habit_array["leveled_date"]}</span>
 		</label>
 
 	</li>
+
 
 _LIST;
 echo $list;

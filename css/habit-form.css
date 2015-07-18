@@ -6,6 +6,7 @@ body {
   margin: 0; 
   padding: 0;}
 
+
 #left {
   float: left;
   width: 32%;
@@ -102,14 +103,34 @@ li.complete a {
 label {
   background-color: #ec8b68;
   color: #fff;
-  border-top: 1px solid #fe9772;
-  border-bottom: 1px solid #9f593f;
+  border-top: 2px solid #fe9772;
+  border-bottom: 2px solid #9f593f;
   font-size: 18px;
   letter-spacing: .05em;
   text-shadow: 2px 2px 1px #9f593f;
   text-align: left;
   padding-left: 1em;
   }
+label span {
+  background-color: inherit;
+  width: 12%;
+  display: block;
+  float: left;
+}
+
+label span.start {
+  width:22%;
+}
+
+label span.end {
+  width: 20%;
+  clear: right;
+}
+
+label input {
+  float: left;
+  background-color: #cc6b48;
+}
 
 button {
 	float: left;
@@ -127,14 +148,14 @@ p {
   text-align: center;}
 
 .high {
-  background-color: #d7666b;
+  background-color: #6cc0ac;
   color: #fff;
   text-shadow: 2px 2px 1px #914141;
   border-top: 1px solid #e99295;
   border-bottom: 1px solid #914141;}
 
 .normal {
-  background-color: #6cc0ac;
+  background-color: #d7666b;
   color: #fff;
   text-shadow: 2px 2px 1px #3b6a5e;
   border-top: 1px solid #7ee0c9;

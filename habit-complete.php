@@ -17,17 +17,19 @@ function is_variable_set($boolean){
 function calculate_exp($score, $exp){
 	if ($score == 0) $score++;
 	$new_score = $score + $exp;
+	$error_score = (string)$new_score;
+	error_log($error_score);
 	if ($new_score > 127) return 0;
 	return (int)$new_score;
 }
 
 function calculate_level($level, $score){
-	if ($score = 0) return $level + 1;
+	if ($score == 0) return $level + 1;
 	return (int)$level;
 }
 
 function calculate_date($date, $score){
-	if ($score = 0) return date('Y-m-d H:i:s');
+	if ($score == 0) return date('Y-m-d H:i:s');
 	return $date;
 }
 
@@ -37,11 +39,12 @@ $dsn = 'mysql:host=localhost;dbname=habit';
 try { $pdo = new PDO($dsn, $db_username, $db_password); }
 catch (PDOException $e) { $error = $e->getMessage(); die("$error"); }
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+$ajax = "ajax is: ";
 
 // prepare statements
 $sql_update_habits =	"UPDATE habit_tracker SET completion = completion + ? ,
 						priority = priority + ? WHERE habit_id=?; ";
-$sql_update_score =		"UPDATE habit_score SET habit_experience = habit_experience + ? ,
+$sql_update_score =		"UPDATE habit_score SET habit_experience = ? ,
 						habit_level = ?, leveled_up_date = ? WHERE habit_id=?; ";
 
 $habit_statement = $pdo->prepare($sql_update_habits);
@@ -69,6 +72,11 @@ foreach($keys_from_post as $key => $value) {
 	$new_level = calculate_level($_POST["level$number"], $score);
 	$new_date = calculate_date($_POST["date$number"], $score);
 
+	error_log($sql_update_score);
+	error_log($score);
+	error_log($new_level);
+	error_log($new_date);
+	error_log($habit);
 	// habit, complete, priority assigned
 	$sql_array_habit= array($complete, $priority, $habit);
 	$sql_array_score = array($score, $new_level, $new_date, $habit);
