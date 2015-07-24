@@ -98,10 +98,10 @@ $list = <<<_LIST
 				<input type="hidden" name="exp$number" value = "{$habit_array["habit_experience"]}" />
 				<input type="hidden" name="level$number" value = "{$habit_array["habit_level"]}" />
 
-				<span class="level"> <u>level</u>: {$habit_array["habit_level"]}</span>
-				<span class="level"> <u>exp</u>: {$habit_array["habit_experience"]} /128 </span>
-				<span class="level"> <u>points</u>: {$habit_array["score"]}</span>
-				<span class="end level"> <u>last level</u>: {$habit_array["leveled_date"]}</span>
+				<span class="level"> {$habit_array["score"]}</span>
+				<span class="level">  {$habit_array["habit_experience"]} /128 </span>
+				<span class="level">  {$habit_array["habit_level"]}</span>
+				<span class="end level"> {$habit_array["leveled_date"]}</span>
 		</label>
 
 	</li>

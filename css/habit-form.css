@@ -1,5 +1,3 @@
-@import url(http://fonts.googleapis.com/css?family=Oswald);
-
 body {
   background-color: #000;
   font-family: 'Oswald', 'Futura', sans-serif;
@@ -76,16 +74,12 @@ ul {
   margin: 0;}
 
 li {
-  background-color: #ec8b68;
+ /* background-color: #ec8b68; */
   color: #fff;
-  border-top: 1px solid #fe9772;
-  border-bottom: 1px solid #9f593f;
   font-size: 16px;
   letter-spacing: .05em;
-  list-style-type: none;
-  text-shadow: 2px 2px 1px #9f593f;
   text-align: left;
-/*  height: 50px; */
+  list-style-type: none;
   padding-left: 1em;
 }
 
@@ -101,21 +95,19 @@ li.complete a {
   background-image: none;}
 
 label {
-  background-color: #ec8b68;
   color: #fff;
-  border-top: 2px solid #fe9772;
-  border-bottom: 2px solid #9f593f;
+  border-bottom: 2px solid #9f593f; */
   font-size: 18px;
   letter-spacing: .05em;
-  text-shadow: 2px 2px 1px #9f593f;
   text-align: left;
   padding-left: 1em;
   }
 label span {
   background-color: inherit;
-  width: 12%;
+  width: 8%;
   display: block;
   float: left;
+  text-align: justify;
 }
 
 label span.start {
@@ -129,7 +121,6 @@ label span.end {
 
 label input {
   float: left;
-  background-color: #cc6b48;
 }
 
 button {
@@ -148,25 +139,24 @@ p {
   text-align: center;}
 
 .high {
-  background-color: #6cc0ac;
+  background-color: #176; 
   color: #fff;
-  text-shadow: 2px 2px 1px #914141;
-  border-top: 1px solid #e99295;
-  border-bottom: 1px solid #914141;}
+}
 
 .normal {
-  background-color: #d7666b;
+  background-color: #922;
   color: #fff;
-  text-shadow: 2px 2px 1px #3b6a5e;
-  border-top: 1px solid #7ee0c9;
-  border-bottom: 1px solid #3b6a5e;}
+}
 
 .low {
-  background-color: #999;
+  background-color: #333;
   color: #fff;
-  border-top: 1px solid #666;
-  border-bottom: 1px solid #b0b0b0;
-  text-shadow: 2px 2px 1px #333;}
+}
+
+.level {
+	padding-left: 1em;
+}
+
 
 .complete a {display:block;}
 
@@ -207,7 +197,7 @@ input[type='submit'], a.add, button, a.show {
   border: none;
   padding: 8px 10px;
   margin-top: 10px;
-  font-family: 'Oswald', 'Futura', sans-serif;
+  font-family: sans-serif;
   font-size: 14px;
   text-decoration: none;
   text-transform: uppercase;}
