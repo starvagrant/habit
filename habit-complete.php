@@ -1,5 +1,5 @@
 <?php
-$ajzx = "ajax: ";
+// initial json brace
 
 function error_log_dump($var){
 ob_start();
@@ -39,7 +39,6 @@ $dsn = 'mysql:host=localhost;dbname=habit';
 try { $pdo = new PDO($dsn, $db_username, $db_password); }
 catch (PDOException $e) { $error = $e->getMessage(); die("$error"); }
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-$ajax = "ajax is: ";
 
 // prepare statements
 $sql_update_habits =	"UPDATE habit_tracker SET completion = completion + ? ,
@@ -72,16 +71,26 @@ foreach($keys_from_post as $key => $value) {
 	$new_level = calculate_level($_POST["level$number"], $score);
 	$new_date = calculate_date($_POST["date$number"], $score);
 
+$ajax_data = "{";
+$ajax_data .= '"habit": ' . $habit . ', ';
+$ajax_data .= '"complete": ' . $complete . ',';
+$ajax_data .= '"priority": ' . $priority . ',';
+$ajax_data .= '"score": ' . $score . ',';
+$ajax_data .= '"new_level": ' . $new_level . ',';
+$ajax_data .= '"new_date": ' . $habit;
+$ajax_data .= '}';
+/*
 	error_log($sql_update_score);
 	error_log($score);
 	error_log($new_level);
 	error_log($new_date);
 	error_log($habit);
+*/
 	// habit, complete, priority assigned
 	$sql_array_habit= array($complete, $priority, $habit);
 	$sql_array_score = array($score, $new_level, $new_date, $habit);
 
-	if($habit_statement->execute($sql_array_habit)) $ajax .= $number;
+	if($habit_statement->execute($sql_array_habit));
 	if($score_statement->execute($sql_array_score));
 
 	} // end if
@@ -90,6 +99,6 @@ foreach($keys_from_post as $key => $value) {
 
 $pdo->commit();
 
-print $ajax;
+print $ajax_data;
 } // end POST processing
 ?>

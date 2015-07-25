@@ -149,12 +149,15 @@ function print_dump($var){
 
 <body>
 	<form id="habit-complete" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" >
-		<ul>
+		<ul id="habit-list">
 			<li> Habit, Complete, Priority </li>
 			<?php foreach ($filtered_array as $key => $filtered_items) { $number = 0; make_list_item($filtered_items); } ?>
 		</ul>
 	<button id="submit-button">Submit All</button>
 	</form>
+		<ul id="feedback-list">
+			<li>FeedBack List</li>
+		</ul>
 	<button id="restore-button">Restore Form</button>
 	<?php// print_dump($error_array); ?>
 
@@ -167,6 +170,7 @@ $( document ).ready( function(){
 	var $submitButton = $('button#submit-button');
 	var $restoreButton = $('button#restore-button');
 	var $checkboxes = $('input[type=checkbox]');
+	var $feedBackList = $('ul#feedback-list');
 
 //////////////////////////////////////////////////////////////// UI events
 	$restoreButton.hide();
@@ -211,6 +215,10 @@ $( document ).ready( function(){
 	});
 
 //////////////////////////////////////////////////////////////// Ajax
+	$( document ).ajaxSuccess(function (event, xhr, settings){
+		var listItem = '<li>' + xhr.responseText + '</li>';
+		$feedBackList.append(listItem);	
+	});	
 	$form.on('submit', null, serializedData, function(event) {
 		// prevent form submission
 		event.preventDefault();
@@ -234,12 +242,23 @@ $( document ).ready( function(){
 //			console.log(textStatus);
 		})
 //		jqXHR.always(function( data|jqXHR, textStatus, jqXHR|errorThrown ) { });
-		.always(function(data__jqXHR, textStatus, jqXHR__errorThrown){
-			console.log('finished');
-//			console.log(textStatus);
-			console.log(data__jqXHR);
-//			console.log(jqXHR__errorThrown);
-//			console.log('finished');
+		.always(function(data_or_jqXHR, textStatus, jqXHR_or_errorThrown){
+			if (typeof data_or_jqXHR === "string"){
+				var data = data_or_jqXHR;
+				var success = true;
+			} else {
+				var jqXHR = data_or_jqXHR;
+				var success = false;
+			}
+			if (typeof jqXHR_or_errorThrown === "string"){
+				var errorThrown = jqXHR_or_errorThrown;
+			} else {
+				var jqXHR = jqXHR_or_errorThrown;
+			}
+
+			if (data !== undefined){
+				var responseObject = JSON.parse(data);
+			}
 		});
 
 	}); // end on submit
@@ -254,6 +273,5 @@ $( document ).ready( function(){
 
 }); // end jquery's on ready function
 </script>
-<?php error_log("FINISHED"); ?>
 </body>
 </html>
