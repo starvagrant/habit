@@ -1,5 +1,6 @@
 <?php
 require 'login.php';
+require 'ArraySorterClass.php';
 $dsn = 'mysql:host=localhost;dbname=habit';
 
 try { $pdo = new PDO($dsn, $db_username, $db_password); }
@@ -55,6 +56,13 @@ function push_db_rows_to_global_habit_array($query){
 		$habit[] = $row;
 	}
 }
+function scrape_duplicates_from_global_habit_array(){
+	global $habit;
+	// circle through habit array: each key returns an sql row
+	// I need to compare row_arrays['habit_id'] and pop off 
+	// any duplicates
+	
+}
 
 // select habits with four highest priority scores (highest priority)
 // followed by highest completion and longest time since update
@@ -72,6 +80,7 @@ $sql_select3 = "SELECT h.habit_id, h.habit_name, h.priority, h.completion,
 				FROM habit_tracker as h INNER JOIN habit_score as s ON h.habit_id=s.habit_id
 				ORDER BY h.update_date ASC LIMIT 3; ";
 
+
 try {
 
 push_db_rows_to_global_habit_array($sql_select1);
@@ -83,9 +92,20 @@ catch (PDOException $e){
 	error_log($e->getMessage());
 }
 
-function make_list_item($habit_array, $number){
+$sql_distinct_sorter = new ArraySorter('habit_id');
+foreach ($habit as $habit_keys => $habit_row){
+
+	$sql_distinct_sorter->push_if_unique_array($habit_row);
+	$filtered_array = $sql_distinct_sorter->getArray();
+
+//	if(isset($sql_distinct_sorter->return_array)) error_print($sql_distinct_sorter->return_array);
+}
+//$habit = $sql_distinct_sorter->getArray();
+
+function make_list_item($habit_array){
+	global $number;
 // $habit is a value for form submission, $number is the numbered item
-$list = <<<_LIST
+	$list = <<<_LIST
 	<li>
 		<label class="{$habit_array["urgency"]}">
 				<span class="start">{$habit_array["habit_name"]}:</span>
@@ -105,10 +125,10 @@ $list = <<<_LIST
 		</label>
 
 	</li>
-
-
 _LIST;
-echo $list;
+	echo $list;
+	$number++;
+	
 }
 
 function print_dump($var){
@@ -131,11 +151,12 @@ function print_dump($var){
 	<form id="habit-complete" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" >
 		<ul>
 			<li> Habit, Complete, Priority </li>
-			<?php for($i = 0; $i < 10; $i++) {make_list_item($habit[$i], $i); } ?>
+			<?php foreach ($filtered_array as $key => $filtered_items) { $number = 0; make_list_item($filtered_items); } ?>
 		</ul>
 	<button id="submit-button">Submit All</button>
 	</form>
 	<button id="restore-button">Restore Form</button>
+	<?php// print_dump($error_array); ?>
 
 <script src="jquery-1.11.0.js"></script>
 <script>
@@ -233,5 +254,6 @@ $( document ).ready( function(){
 
 }); // end jquery's on ready function
 </script>
+<?php error_log("FINISHED"); ?>
 </body>
 </html>

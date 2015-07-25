@@ -1,6 +1,6 @@
 body {
   background-color: #000;
-  font-family: 'Oswald', 'Futura', sans-serif;
+  font-family: 'Oswald', 'Georgia','Verdana', 'sans-serif';
   margin: 0; 
   padding: 0;}
 
@@ -96,7 +96,7 @@ li.complete a {
 
 label {
   color: #fff;
-  border-bottom: 2px solid #9f593f; */
+  
   font-size: 18px;
   letter-spacing: .05em;
   text-align: left;
@@ -104,19 +104,18 @@ label {
   }
 label span {
   background-color: inherit;
-  width: 8%;
+  width: 10%;
   display: block;
   float: left;
   text-align: justify;
 }
 
 label span.start {
-  width:22%;
+  width:23%;
 }
 
 label span.end {
   width: 20%;
-  clear: right;
 }
 
 label input {
