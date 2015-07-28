@@ -1,7 +1,9 @@
 <?php
 require 'login.php';
 require 'ArraySorterClass.php';
+
 $dsn = 'mysql:host=localhost;dbname=habit';
+$Test = new TestClass("quiet");
 
 try { $pdo = new PDO($dsn, $db_username, $db_password); }
 catch (PDOException $e) { $error = $e->getMessage(); die("$error"); }
@@ -9,19 +11,36 @@ catch (PDOException $e) { $error = $e->getMessage(); die("$error"); }
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $habit = array();
 
+/////////////////////////////////////////////////////////////////////////// Error Functions
+
+function print_dump($var){
+	echo "<pre>\n"; var_dump($var); echo "</pre>\n";
+}
+
+/////////////////////////////////////////////////////////////////////////// Value Calculation
+
 function get_habit_urgency_css_classname($completion, $priority) {
 	// no divide by zero
 	if ($priority == 0) $priority++;
 
 	// css class name for list item
-	$urgency = $completion / $priority;
-	if ($urgency > 0.85) $urgency = 0.85;
-	if ($urgency > 0.70) {
-		$css_class_name = "low";
-	} else if ($urgency < 0.70 && $urgency > 0.40){
-		$css_class_name = "normal";
-	} else {
-		$css_class_name = "high";
+	$urgency = get_urgency($completion, $priority);
+	$test_case = true;
+	switch ($test_case){  
+	case $urgency >= 0.60: 
+		$css_class_name = "established";
+		break;
+	case $urgency > 0.50:
+		$css_class_name = "relaxed";
+		break;
+	case $urgency > 0.35:
+		$css_class_name = "moderate";
+		break;
+	case $urgency > 0.25:
+		$css_class_name = "heigthened";
+	default:
+		$css_class_name = "severe";
+		break;
 	}
 	return $css_class_name;
 }
@@ -39,6 +58,14 @@ function get_habit_score($completion, $priority, $habit_level) {
 	return $habit_score;
 }
 
+function get_urgency($completion, $priority) {
+	if ($priority == 0) $priority++;
+	$urgency = $completion / $priority;
+	return $urgency;
+}
+
+/////////////////////////////////////////////////////////////////////////// Data Function
+
 function push_db_rows_to_global_habit_array($query){
 	global $pdo;
 	global $habit;
@@ -49,20 +76,49 @@ function push_db_rows_to_global_habit_array($query){
 		$completion = $row["completion"]; $priority = $row["priority"];
 		$leveled_up_date = $row["leveled_up_date"]; $habit_level = $row["habit_level"];
 
-		$row['urgency'] = get_habit_urgency_css_classname($completion, $priority);
+		$row['urgency_class'] = get_habit_urgency_css_classname($completion, $priority);
+		$row['urgency'] = get_urgency($completion, $priority);
 		$row['leveled_date'] = get_habit_date($leveled_up_date);
 		$row['score'] = get_habit_score($completion, $priority, $habit_level);
 
 		$habit[] = $row;
 	}
 }
-function scrape_duplicates_from_global_habit_array(){
-	global $habit;
-	// circle through habit array: each key returns an sql row
-	// I need to compare row_arrays['habit_id'] and pop off 
-	// any duplicates
-	
+/////////////////////////////////////////////////////////////////////////// Make HTML
+$increment = 0; 
+function make_list_item($habit_array){
+// note: each time inputs change, I need to change the % test in habit-complete.php
+	global $increment;
+	$list = <<<_LIST
+	<li>
+		<label class="{$habit_array["urgency_class"]}">
+				<span class="start">{$habit_array["habit_name"]}:</span>
+
+				<input type="checkbox" name="complete$increment" value="1" />
+				<input type="checkbox" name="priority$increment" value="1" checked="checked" />
+				<input type="hidden" name="score$increment" value = "{$habit_array["score"]}" />
+				<input type="hidden" name="habit_id$increment" value = "{$habit_array["habit_id"]}" />
+				<input type="hidden" name="habit_name$increment" value = "{$habit_array["habit_name"]}" />
+				<input type="hidden" name="date$increment" value = "{$habit_array["leveled_up_date"]}" />
+				<input type="hidden" name="exp$increment" value = "{$habit_array["habit_experience"]}" />
+				<input type="hidden" name="level$increment" value = "{$habit_array["habit_level"]}" />
+				<input type="hidden" name="urgency$increment" value = "{$habit_array["urgency"]}" />
+
+				<span class="level"> {$habit_array["score"]}</span>
+				<span class="level">  {$habit_array["habit_experience"]} /128 </span>
+				<span class="level">  {$habit_array["habit_level"]}</span>
+				<span class="end level"> {$habit_array["leveled_date"]}</span>
+		</label>
+
+	</li>
+_LIST;
+	echo $list;
+	$increment++;
 }
+
+////////////////////////////////////////////////////////////////////////// End Functions
+
+
 
 // select habits with four highest priority scores (highest priority)
 // followed by highest completion and longest time since update
@@ -83,62 +139,53 @@ $sql_select3 = "SELECT h.habit_id, h.habit_name, h.priority, h.completion,
 
 try {
 
-push_db_rows_to_global_habit_array($sql_select1);
-push_db_rows_to_global_habit_array($sql_select2);
-push_db_rows_to_global_habit_array($sql_select3);
+	push_db_rows_to_global_habit_array($sql_select1);
+	push_db_rows_to_global_habit_array($sql_select2);
+	push_db_rows_to_global_habit_array($sql_select3);
 
 }
 catch (PDOException $e){
 	error_log($e->getMessage());
+	die ('uncaught exception');
 }
 
 $sql_distinct_sorter = new ArraySorter('habit_id');
-foreach ($habit as $habit_keys => $habit_row){
 
-	$sql_distinct_sorter->push_if_unique_array($habit_row);
+// test parameters
+$evaluated = 0; $pushed = 0;
+foreach ($habit as $habit_keys => $habit_row){
+	$evaluated++; 
+	if($sql_distinct_sorter->push_if_unique_array($habit_row)) {
+		$pushed++;
+	}
+	// values that indicate not enough pushed
+	if ($evaluated === 4 && $pushed < 4) {
+		$too_little_pushed = true;
+		$message = "not enough, first query";
+		error_print($habit);
+	} else if ($evaluated === 7 && $pushed < 4){
+	   	$too_little_pushed = true;
+		error_print($habit);
+		$message = "not enough, second query";
+	} else if ($evaluated === 10 && $pushed < 6) {
+		$too_little_pushed = true;
+		$message = "not enough, third query";
+		error_print($habit);
+	} else {
+		$too_little_pushed = false;
+		$message = "nothing wrong";
+	}
+
+	$Test->setErrorMessage($message);
+	$Test->testTrue(!$too_little_pushed);
 	$filtered_array = $sql_distinct_sorter->getArray();
 
-//	if(isset($sql_distinct_sorter->return_array)) error_print($sql_distinct_sorter->return_array);
-}
-//$habit = $sql_distinct_sorter->getArray();
-
-function make_list_item($habit_array){
-	global $number;
-// $habit is a value for form submission, $number is the numbered item
-	$list = <<<_LIST
-	<li>
-		<label class="{$habit_array["urgency"]}">
-				<span class="start">{$habit_array["habit_name"]}:</span>
-
-				<input type="hidden" name="habit$number" value = "{$habit_array["habit_id"]}" />
-				<input type="checkbox" name="complete$number" value="1" />
-				<input type="checkbox" name="priority$number" value="1" checked="checked" />
-				<input type="hidden" name="score$number" value = "{$habit_array["score"]}" />
-				<input type="hidden" name="date$number" value = "{$habit_array["leveled_up_date"]}" />
-				<input type="hidden" name="exp$number" value = "{$habit_array["habit_experience"]}" />
-				<input type="hidden" name="level$number" value = "{$habit_array["habit_level"]}" />
-
-				<span class="level"> {$habit_array["score"]}</span>
-				<span class="level">  {$habit_array["habit_experience"]} /128 </span>
-				<span class="level">  {$habit_array["habit_level"]}</span>
-				<span class="end level"> {$habit_array["leveled_date"]}</span>
-		</label>
-
-	</li>
-_LIST;
-	echo $list;
-	$number++;
-	
 }
 
-function print_dump($var){
-	echo "<pre>\n"; var_dump($var); echo "</pre>\n";
-}
 ?>
 
 <!DOCTYPE html>
-<html lang="en-us">
-
+<html lang="en-US">
 <head>
 
 <title>dynamichabits.php</title>
@@ -151,7 +198,7 @@ function print_dump($var){
 	<form id="habit-complete" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" >
 		<ul id="habit-list">
 			<li> Habit, Complete, Priority </li>
-			<?php foreach ($filtered_array as $key => $filtered_items) { $number = 0; make_list_item($filtered_items); } ?>
+			<?php foreach ($filtered_array as $key => $filtered_items) { make_list_item($filtered_items); } ?>
 		</ul>
 	<button id="submit-button">Submit All</button>
 	</form>
@@ -159,11 +206,11 @@ function print_dump($var){
 			<li>FeedBack List</li>
 		</ul>
 	<button id="restore-button">Restore Form</button>
-	<?php// print_dump($error_array); ?>
 
 <script src="jquery-1.11.0.js"></script>
 <script>
 $( document ).ready( function(){
+	if(!console.log) alert ('console not working');
 	console.log('yoyoyo');
 	var serializedData;
 	var $form = $('form#habit-complete');
@@ -215,8 +262,23 @@ $( document ).ready( function(){
 	});
 
 //////////////////////////////////////////////////////////////// Ajax
+	//
 	$( document ).ajaxSuccess(function (event, xhr, settings){
-		var listItem = '<li>' + xhr.responseText + '</li>';
+		var habitInfoObject = JSON.parse(xhr.responseText);
+
+		var listItem = '<li class="response-text">' + xhr.responseText + '</li>';
+		var truthItem = '<li><h5>' + habitInfoObject.habit_leveled + ' ';
+		truthItem += '';
+		truthItem += '';
+		truthItem += '';
+		truthItem += '</h5></li>';
+//		console.dir(habitInfoObject);
+		if (habitInfoObject.habit_leveled === "true") {
+			$feedBackList.append(truthItem);
+		} else {
+			$feedBackList.append(truthItem);
+		}
+
 		$feedBackList.append(listItem);	
 	});	
 	$form.on('submit', null, serializedData, function(event) {
@@ -257,7 +319,9 @@ $( document ).ready( function(){
 			}
 
 			if (data !== undefined){
-				var responseObject = JSON.parse(data);
+				console.log(data);
+//				var responseObject = JSON.parse(data);
+//				console.dir(responseObject);
 			}
 		});
 
@@ -273,5 +337,10 @@ $( document ).ready( function(){
 
 }); // end jquery's on ready function
 </script>
+
+<?php 
+///////////////////////////////////////////////////////////////////////////// Assertions
+
+?>
 </body>
 </html>

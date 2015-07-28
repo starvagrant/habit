@@ -89,10 +89,17 @@ li a {
   background-position: right, center;
   background-repeat: no-repeat;
   text-decoration: none;
-  padding-right: 36px;}
+  padding-right: 36px;
+}
 
 li.complete a {
-  background-image: none;}
+  background-image: none;
+}
+
+li.response-text {
+  font-size: .75em;
+}
+
 
 label {
   color: #fff;
@@ -137,17 +144,29 @@ p {
   border-radius: 5px;
   text-align: center;}
 
-.high {
-  background-color: #176; 
-  color: #fff;
-}
-
-.normal {
+.severe {
   background-color: #922;
   color: #fff;
 }
 
-.low {
+.heightend {
+  background-color: #992; 
+  color: #fff;
+}
+
+.moderate {
+  background-color: #292; 
+  color: #fff;
+
+}
+
+.relaxed {
+  background-color: #229; 
+  color: #fff;
+
+}
+
+.established {
   background-color: #333;
   color: #fff;
 }
