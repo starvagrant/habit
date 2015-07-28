@@ -45,12 +45,6 @@ function get_habit_urgency_css_classname($completion, $priority) {
 	return $css_class_name;
 }
 
-function get_habit_date($leveled_up_date){
-	$date_part = preg_split('/[:-\s]/', $leveled_up_date);
-	$habit_date = $date_part[1] . "-" . $date_part[2] . " " . $date_part[0];
-	return $habit_date;
-}
-
 function get_habit_score($completion, $priority, $habit_level) {
 	if ($completion == 0) $completion++;
 	$habit_score = 8 * ($priority / $completion) * ((128 - $habit_level) / 128);
@@ -64,6 +58,19 @@ function get_urgency($completion, $priority) {
 	return $urgency;
 }
 
+function get_experience_for_display($experience){
+	if ($experience <= 0) return 0;
+	return $experience % 128;
+}
+
+function get_date_for_display($date){
+	// 2000-01-01 13:13:13
+	$date_without_time = substr($date, 0, 10);
+	$date_fragments = explode('-', $date_without_time);
+	$date = $date_fragments[1] . '/' . $date_fragments[2] . ' ' . $date_fragments[0];
+	return $date;
+}
+
 /////////////////////////////////////////////////////////////////////////// Data Function
 
 function push_db_rows_to_global_habit_array($query){
@@ -75,11 +82,13 @@ function push_db_rows_to_global_habit_array($query){
 
 		$completion = $row["completion"]; $priority = $row["priority"];
 		$leveled_up_date = $row["leveled_up_date"]; $habit_level = $row["habit_level"];
+		$habit_experience = $row['habit_experience'];
 
 		$row['urgency_class'] = get_habit_urgency_css_classname($completion, $priority);
 		$row['urgency'] = get_urgency($completion, $priority);
-		$row['leveled_date'] = get_habit_date($leveled_up_date);
 		$row['score'] = get_habit_score($completion, $priority, $habit_level);
+		$row['display_experience'] = get_experience_for_display($habit_experience);
+		$row['display_date'] = get_date_for_display($leveled_up_date);
 
 		$habit[] = $row;
 	}
@@ -100,14 +109,14 @@ function make_list_item($habit_array){
 				<input type="hidden" name="habit_id$increment" value = "{$habit_array["habit_id"]}" />
 				<input type="hidden" name="habit_name$increment" value = "{$habit_array["habit_name"]}" />
 				<input type="hidden" name="date$increment" value = "{$habit_array["leveled_up_date"]}" />
-				<input type="hidden" name="exp$increment" value = "{$habit_array["habit_experience"]}" />
+				<input type="hidden" name="experience$increment" value = "{$habit_array["habit_experience"]}" />
 				<input type="hidden" name="level$increment" value = "{$habit_array["habit_level"]}" />
 				<input type="hidden" name="urgency$increment" value = "{$habit_array["urgency"]}" />
 
 				<span class="level"> {$habit_array["score"]}</span>
-				<span class="level">  {$habit_array["habit_experience"]} /128 </span>
+				<span class="level">  {$habit_array["display_experience"]} /128 </span>
 				<span class="level">  {$habit_array["habit_level"]}</span>
-				<span class="end level"> {$habit_array["leveled_date"]}</span>
+				<span class="end level"> {$habit_array["display_date"]}</span>
 		</label>
 
 	</li>
@@ -162,22 +171,20 @@ foreach ($habit as $habit_keys => $habit_row){
 	if ($evaluated === 4 && $pushed < 4) {
 		$too_little_pushed = true;
 		$message = "not enough, first query";
-		error_print($habit);
 	} else if ($evaluated === 7 && $pushed < 4){
 	   	$too_little_pushed = true;
-		error_print($habit);
 		$message = "not enough, second query";
 	} else if ($evaluated === 10 && $pushed < 6) {
 		$too_little_pushed = true;
 		$message = "not enough, third query";
-		error_print($habit);
 	} else {
 		$too_little_pushed = false;
 		$message = "nothing wrong";
 	}
-
+/*
 	$Test->setErrorMessage($message);
 	$Test->testTrue(!$too_little_pushed);
+*/
 	$filtered_array = $sql_distinct_sorter->getArray();
 
 }
