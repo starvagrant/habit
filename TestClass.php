@@ -15,13 +15,11 @@ function error_print($var){
 	error_log($error);
 }
 function my_assert_handler($file, $line, $code, $desc = null) {
-	echo "Assertion Failed:
-	File '$file'
-	Line '$line'
-	Code '$code'";
+	$error_string = "File: '$file' Line: '$line' Code: '$code'";
 	if ($desc) {
-		echo "\n description: $desc \n";
+		$error_string .= " description: $desc ";
 	}		
+	error_log($error_string);
 }
 
 Class TestClass {

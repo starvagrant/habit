@@ -36,8 +36,8 @@ function calculate_date($date, $score){
 	return $date;
 }
 function did_habit_level($old_level, $new_level){
-	if ($new_level > $old_level) return true;
-	return false;
+	if ($new_level > $old_level) return 1;
+	return 0;
 }
 
 if(isset($_POST)) {
@@ -54,7 +54,7 @@ $sql_update_habits =	"UPDATE habit_tracker SET completion = completion + ? ,
 $sql_update_score =		"UPDATE habit_score SET habit_experience = ? ,
 						habit_level = ?, leveled_up_date = ? WHERE habit_id=?; ";
 
-$sql_insert_history =	"INSERT INTO habits_over_time VALUES (?, ?, ?, ?, ?, ?, ?, ?) ; "; 
+$sql_insert_history =	"INSERT INTO habits_over_time VALUES (?, ?, ?, ?, ?, ?, ?, ?) ; ";
 
 $habit_statement = $pdo->prepare($sql_update_habits);
 $score_statement = $pdo->prepare($sql_update_score);
@@ -79,7 +79,7 @@ foreach($keys_from_post as $key => $value) {
 	$habit_name = $_POST["habit_name$increment"];
 	$score = $_POST["score$increment"];
 	$urgency = $_POST["urgency$increment"];
-	$experience =  $_POST["experience$increment"]; 
+	$experience =  $_POST["experience$increment"];
 	$old_date = $_POST["date$increment"];
 
 	$complete = is_variable_set(isset($_POST["complete$increment"]));
@@ -96,10 +96,10 @@ foreach($keys_from_post as $key => $value) {
 
 	// recording date after leveling
 	// $new_date for SQL, $habit_level_string for JSON
-	if ($habit_leveled_up){
-		$new_date = $current_date;	
+	if ($habit_leveled_up === 1){
+		$new_date = $current_date;
 		$habit_level_string = "true";
-	} else {
+	} else if ($habit_leveled_up === 0){
 		$new_date = $old_date;
 		$habit_level_string = "false";
 	}
@@ -108,11 +108,11 @@ foreach($keys_from_post as $key => $value) {
 	$sql_array_habit= array($complete, $priority, $habit_id);
 	$sql_array_score = array($new_experience, $new_level, $new_date, $habit_id);
 
-	// 		habit_id, completed, priority, urgency, time_of_entry 
-	// 		habit_level, habit_experience, leveled_up_date 
+	// 		habit_id, completed, priority, urgency, time_of_entry
+	// 		habit_level, habit_experience, leveled_up_date
 	$sql_array_history = array(
-			$habit_id, $complete, $priority, $urgency, $current_date, 
-			$new_level, $score,  $new_date 
+			$habit_id, $complete, $priority, $urgency, $current_date,
+			$new_level, $score,  $new_date
 			);
 
 	$habit_statement->execute($sql_array_habit);
@@ -134,7 +134,7 @@ foreach($keys_from_post as $key => $value) {
 _AJAX;
 
 
-} // end if 
+} // end if
 
 } // end foreach
 

@@ -160,7 +160,11 @@ catch (PDOException $e){
 
 $sql_distinct_sorter = new ArraySorter('habit_id');
 
-// test parameters
+/*
+ *
+ * Testing If Array Sorter is accepting values as it should
+ */
+
 $evaluated = 0; $pushed = 0;
 foreach ($habit as $habit_keys => $habit_row){
 	$evaluated++; 
@@ -181,10 +185,6 @@ foreach ($habit as $habit_keys => $habit_row){
 		$too_little_pushed = false;
 		$message = "nothing wrong";
 	}
-/*
-	$Test->setErrorMessage($message);
-	$Test->testTrue(!$too_little_pushed);
-*/
 	$filtered_array = $sql_distinct_sorter->getArray();
 
 }
@@ -215,135 +215,7 @@ foreach ($habit as $habit_keys => $habit_row){
 	<button id="restore-button">Restore Form</button>
 
 <script src="jquery-1.11.0.js"></script>
-<script>
-$( document ).ready( function(){
-	if(!console.log) alert ('console not working');
-	console.log('yoyoyo');
-	var serializedData;
-	var $form = $('form#habit-complete');
-	var $submitButton = $('button#submit-button');
-	var $restoreButton = $('button#restore-button');
-	var $checkboxes = $('input[type=checkbox]');
-	var $feedBackList = $('ul#feedback-list');
-
-//////////////////////////////////////////////////////////////// UI events
-	$restoreButton.hide();
-
-	$checkboxes.on('change', function(event){
-		console.log('yoyoyo');
-		// put data in global serialized string $form.submit will use
-		serializedData = $(this).parent().children().serialize( "input" );
-//		console.log(serializedData);
-
-		$form.submit();
-		// reset checkboxes to original state (checked attribute)
-		if ($(this).attr('checked')) $(this).prop('checked', true);
-		if (!$(this).attr('checked')) $(this).prop('checked', false);
-		// the document's html: li > label > input, li needs to be hideen
-		$(this).parent().parent().hide();
-	});
-
-	$submitButton.on('click', function(event){
-		event.preventDefault();
-		serializedData = $form.serialize();
-		console.log(serializedData);
-		$form.submit();
-		$form.hide();
-		$(this).show();
-		$restoreButton.show();
-	});
-
-	$restoreButton.on('click', function(event){
-		event.preventDefault();
-		$(this).hide();
-		$form.show();
-		// the document's html: li > label > input, li needs to be shown
-		$checkboxes.parent().parent().show();
-		setTimeout(function(){			// automatic form submission, after interval
-			serializedData = $form.serialize();
-			$form.submit();
-			$form.hide();
-			$restoreButton.show();
-	}, 3600000);
-
-	});
-
-//////////////////////////////////////////////////////////////// Ajax
-	//
-	$( document ).ajaxSuccess(function (event, xhr, settings){
-		var habitInfoObject = JSON.parse(xhr.responseText);
-
-		var listItem = '<li class="response-text">' + xhr.responseText + '</li>';
-		var truthItem = '<li><h5>' + habitInfoObject.habit_leveled + ' ';
-		truthItem += '';
-		truthItem += '';
-		truthItem += '';
-		truthItem += '</h5></li>';
-//		console.dir(habitInfoObject);
-		if (habitInfoObject.habit_leveled === "true") {
-			$feedBackList.append(truthItem);
-		} else {
-			$feedBackList.append(truthItem);
-		}
-
-		$feedBackList.append(listItem);	
-	});	
-	$form.on('submit', null, serializedData, function(event) {
-		// prevent form submission
-		event.preventDefault();
-
-		var request;
-
-		if (request) { request.abort(); } // abort if request is already present
-		// serialized data passed through function call
-		request = $.ajax({
-			url: "habit-complete.php",
-			type: "post",
-			data: serializedData
-		})
-		//
-		.done(function(data, textStatus, jqueryXHR) {
-			console.log('success!!');
-		})
-
-		.fail(function(jqueryXHR, textStatus, errorThrown) {
-			console.log('fail!!');
-//			console.log(textStatus);
-		})
-//		jqXHR.always(function( data|jqXHR, textStatus, jqXHR|errorThrown ) { });
-		.always(function(data_or_jqXHR, textStatus, jqXHR_or_errorThrown){
-			if (typeof data_or_jqXHR === "string"){
-				var data = data_or_jqXHR;
-				var success = true;
-			} else {
-				var jqXHR = data_or_jqXHR;
-				var success = false;
-			}
-			if (typeof jqXHR_or_errorThrown === "string"){
-				var errorThrown = jqXHR_or_errorThrown;
-			} else {
-				var jqXHR = jqXHR_or_errorThrown;
-			}
-
-			if (data !== undefined){
-				console.log(data);
-//				var responseObject = JSON.parse(data);
-//				console.dir(responseObject);
-			}
-		});
-
-	}); // end on submit
-
-	setTimeout(function(){			// automatic form submission, after interval
-		serializedData = $form.serialize();
-		$form.submit();
-		$form.hide();
-		$restoreButton.show();
-	}, 3600000);
-
-
-}); // end jquery's on ready function
-</script>
+<script src="js/dynamic-habit-form.js"></script>
 
 <?php 
 ///////////////////////////////////////////////////////////////////////////// Assertions

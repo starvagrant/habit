@@ -9,7 +9,7 @@ Class ArraySorter {
 	private $test;
 
 	public function __construct($sort_field){
-		$this->sort_field = $sort_field;	
+		$this->sort_field = $sort_field;
 	}
 
 	public function push_if_unique_array($array){
@@ -28,16 +28,17 @@ Class ArraySorter {
 		$this->current_value = $array[$this->sort_field];
 		// if current_value isn't in the unique_array, add to the value 
 		// to unique_array and the entire row to the return array
-		
-		error_dump($this->current_value);	
-		error_log($this->current_value);	
+
+	//	error_dump($this->current_value);
+	//	error_log($this->current_value);
 
 		if (!in_array($this->current_value, $this->unique_array)) {
 			$this->unique_array[] = $array[$this->sort_field];
 			$this->return_array[] = $array;
-		}	
-		$test->setErrorMessage('each array should have one unique value');
-		$test->testTrue(isset($this->return_array));
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public function getArray(){
@@ -49,7 +50,7 @@ Class ArraySorter {
 	}
 
 	public function keyInArray($array){
-		return isset($array[$this->sort_field]);	
+		return isset($array[$this->sort_field]);
 	}
 
 }
