@@ -3,71 +3,6 @@ body {
   font-family: 'Oswald', 'Georgia','Verdana', 'sans-serif';
   margin: 0; 
   padding: 0;}
-
-
-#left {
-  float: left;
-  width: 32%;
-  margin-right: 1%;
-  border: 1px green solid;
-}
-
-#center {
-  float: left;
-  width: 32%;
-  margin-right: 1%;
-  border: 1px green solid;
-}
-
-#right {
-  float: left;
-  width: 32%;
-  margin-right: 1%;
-  border: 1px green solid;
-}	
-#page {
-  background-color: #403c3b;
-  margin: 0 auto 0 auto;
-  position: relative;
-  text-align: center;}
-  /* Responsive page rules at bottom of style sheet */
-
-h1 {
-/*  background-image: url(kinglogo.png); */
-  background-repeat: no-repeat;
-  background-position: center center;
-  text-align: center;
-  text-indent: -1000%;
-  height: 75px;
-  line-height: 75px;
-  width: 117px;
-  margin: 0 auto 0 auto;
-  padding: 30px 10px 20px 10px;}
-
-h2 {
-  color: #fff;
-  font-size: 24px;
-  font-weight: normal;
-  text-align: center;
-  text-transform: uppercase;
-  letter-spacing: .3em;
-  display: inline-block;
-  margin: 0 0 23px 0;}
-
-h2 span {
-  background-color: #fff;
-  color: #000;
-  font-size: 12px;
-  text-align: center;
-  letter-spacing: 0;
-  display: inline-block;
-  position: relative;
-  border-radius: 50%;
-  top: -5px;
-  height: 22px;
-  width: 26px;
-  padding: 4px 0 0 0;}
-
 ul {
   border:none;
   padding: 0;
@@ -175,25 +110,6 @@ p {
 	padding-left: 1em;
 }
 
-
-.complete a {display:block;}
-
-.favorite {
-  background-image: url('../images/icon-heart.png');
-  background-position: right, center;
-  background-repeat: no-repeat;}
-
-em.seasonal
- {
-  background-image: url('../images/icon-calendar.png');
-  background-position: left  center;
-  background-repeat: no-repeat;
-  padding-left: 30px;}
-
-.float-right {
-  float: right;
-}
-
 /* FORM STYLES */
 
 form {
@@ -248,74 +164,6 @@ textarea {
 select, option {
   font-size: 12px;}
 
-#feedback, #termsHint {
-  color: #fff;
-  background-image: url('../images/warning.png');
-  background-repeat: no-repeat;
-  background-position: 2px 14px;
-  padding: 10px 0 0 22px;}
-
-#packageHint {
-  color: #fff;
-  background-image: url('../images/hint.png');
-  background-repeat: no-repeat;
-  background-position: 2px 5px;
-  padding-left: 22px;}
-
-label.selectbox {
-  display: inline;}
-
-label.checkbox {
-  display: inline;
-  font-size: 12px;}
-
-/* Link to show list */
-h2 a {
-  font-size: 12px; }
-
-a.show{
-  font-size: 12px; 
-  padding: 5px; 
-  letter-spacing: 0; 
-  position: relative;
-  top: -5px;
-  left: 10px;}
-
-/* form example */
-#newItemButton {padding: 10px 20px 75px 20px; display: none;}
-#newItemForm {padding-top: 20px;}
-#itemDescription {width: 360px;}
-#newItemForm input[type='submit'] {margin-top: 0; text-align: left;}
-
-/* Attributes example */
-#group {
-  margin: 10px;
-  border: 2px solid #fff;}
-
-/* Events object */
-.date, li i {
-  font-size: 12px;
-  padding-left: 8px;}
-
-
-/* Additional styles for position example */
-#slideAd {
-  width: 130px;
-  height: 60px;
-  background-color: #403c3b;
-  background-image: url('../images/adverlion.png');
-  background-repeat: no-repeat;
-  background-position: 10px center;
-  color: #fff;
-  border-top: 1px solid #fff;
-  border-left: 1px solid #fff;
-  border-bottom: 1px solid #fff;
-  padding: 25px 20px 10px 85px;
-  position: fixed;
-  bottom: 20px;
-  right: -235px;
-  text-transform: uppercase;
-}
 
 #footer {
   background:none;
