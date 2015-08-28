@@ -21,7 +21,7 @@ function print_dump($var){
 
 function get_habit_urgency_css_classname($completion, $priority) {
 	// no divide by zero
-	if ($priority == 0) $priority++;
+	if ($priority === 0) $priority++;
 
 	// css class name for list item
 	$urgency = get_urgency($completion, $priority);
@@ -100,29 +100,28 @@ function make_list_item($habit_array){
 	global $increment;
 	$list = <<<_LIST
 	<li>
-		<label class="{$habit_array["urgency_class"]}">
-				<span class="start">{$habit_array["habit_name"]}:</span>
+            <label class="{$habit_array["urgency_class"]}">
+                <span class="start">{$habit_array["habit_name"]}</span>
 
-				<input type="checkbox" name="complete$increment" value="1" />
-				<input type="checkbox" name="priority$increment" value="1" checked="checked" />
-				<input type="hidden" name="score$increment" value = "{$habit_array["score"]}" />
-				<input type="hidden" name="habit_id$increment" value = "{$habit_array["habit_id"]}" />
-				<input type="hidden" name="habit_name$increment" value = "{$habit_array["habit_name"]}" />
-				<input type="hidden" name="date$increment" value = "{$habit_array["leveled_up_date"]}" />
-				<input type="hidden" name="experience$increment" value = "{$habit_array["habit_experience"]}" />
-				<input type="hidden" name="level$increment" value = "{$habit_array["habit_level"]}" />
-				<input type="hidden" name="urgency$increment" value = "{$habit_array["urgency"]}" />
+                <input type="checkbox" name="complete$increment" value="1" />
+                <input type="checkbox" name="priority$increment" value="1" checked="checked" />
+                <input type="hidden" name="score$increment" value = "{$habit_array["score"]}" />
+                <input type="hidden" name="habit_id$increment" value = "{$habit_array["habit_id"]}" />
+                <input type="hidden" name="habit_name$increment" value = "{$habit_array["habit_name"]}" />
+                <input type="hidden" name="date$increment" value = "{$habit_array["leveled_up_date"]}" />
+                <input type="hidden" name="experience$increment" value = "{$habit_array["habit_experience"]}" />
+                <input type="hidden" name="level$increment" value = "{$habit_array["habit_level"]}" />
+                <input type="hidden" name="urgency$increment" value = "{$habit_array["urgency"]}" />
 
-				<span class="level"> {$habit_array["score"]}</span>
-				<span class="level">  {$habit_array["display_experience"]} /128 </span>
-				<span class="level">  {$habit_array["habit_level"]}</span>
-				<span class="end level"> {$habit_array["display_date"]}</span>
-		</label>
-
+                <span class="level"> {$habit_array["score"]}</span>
+                <span class="level">  {$habit_array["display_experience"]} /128 </span>
+                <span class="level">  {$habit_array["habit_level"]}</span>
+                <span class="end level"> {$habit_array["display_date"]}</span>
+            </label>
 	</li>
 _LIST;
-	echo $list;
-	$increment++;
+    echo $list;
+    $increment++;
 }
 
 ////////////////////////////////////////////////////////////////////////// End Functions

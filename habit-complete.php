@@ -22,8 +22,8 @@ function is_variable_set($boolean){
 	return 0;
 }
 function calculate_experience($score, $experience){
-	$experience = $score + $experience;
-	return $experience;
+	$new_experience = $score + $experience;
+	return $new_experience;
 }
 function calculate_level($experience){
 	if ($experience < 128) return 1;
@@ -40,6 +40,11 @@ function did_habit_level($old_level, $new_level){
 	return 0;
 }
 
+function post_filter($string){
+    strip_tags($string);
+    htmlentities($string, ENT_NOQUOTES, "UTF-8", false);
+}
+
 if(isset($_POST)) {
 
 require 'login.php';
@@ -50,9 +55,9 @@ $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 // prepare statements
 $sql_update_habits =	"UPDATE habit_tracker SET completion = completion + ? ,
-						priority = priority + ? WHERE habit_id=?; ";
-$sql_update_score =		"UPDATE habit_score SET habit_experience = ? ,
-						habit_level = ?, leveled_up_date = ? WHERE habit_id=?; ";
+			priority = priority + ? WHERE habit_id=?; ";
+$sql_update_score =	"UPDATE habit_score SET habit_experience = ? ,
+			habit_level = ?, leveled_up_date = ? WHERE habit_id=?; ";
 
 $sql_insert_history =	"INSERT INTO habits_over_time VALUES (?, ?, ?, ?, ?, ?, ?, ?) ; ";
 
