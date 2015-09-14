@@ -26,7 +26,8 @@ CREATE TABLE `habit_description` (
   `habit_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
   `habit_description` varchar(128) DEFAULT NULL,
   `info` varchar(400) DEFAULT NULL,
-  PRIMARY KEY (`habit_id`)
+  PRIMARY KEY (`habit_id`),
+  CONSTRAINT `habit_description_ibfk_1` FOREIGN KEY (`habit_id`) REFERENCES `habit_main` (`habit_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -54,10 +55,12 @@ DROP TABLE IF EXISTS `habit_score`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `habit_score` (
-  `habit_id` mediumint(8) unsigned DEFAULT NULL,
+  `habit_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `habit_level` tinyint(4) NOT NULL DEFAULT '1',
   `habit_experience` smallint(5) unsigned NOT NULL DEFAULT '0',
-  `leveled_up_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `leveled_up_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`habit_id`),
+  CONSTRAINT `habit_score_ibfk_1` FOREIGN KEY (`habit_id`) REFERENCES `habit_main` (`habit_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -74,7 +77,8 @@ CREATE TABLE `habit_tracker` (
   `priority` smallint(5) unsigned NOT NULL DEFAULT '1',
   `completion` smallint(5) unsigned NOT NULL DEFAULT '1',
   `habit_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`habit_id`)
+  PRIMARY KEY (`habit_id`),
+  CONSTRAINT `habit_tracker_ibfk_1` FOREIGN KEY (`habit_id`) REFERENCES `habit_main` (`habit_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -93,7 +97,9 @@ CREATE TABLE `habits_over_time` (
   `time_of_entry` datetime NOT NULL DEFAULT '1920-02-29 13:13:13',
   `habit_level` tinyint(3) unsigned NOT NULL DEFAULT '1',
   `habit_experience` smallint(5) unsigned NOT NULL DEFAULT '0',
-  `leveled_up_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `leveled_up_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY `habit_id` (`habit_id`),
+  CONSTRAINT `habits_over_time_ibfk_1` FOREIGN KEY (`habit_id`) REFERENCES `habit_main` (`habit_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -137,4 +143,4 @@ CREATE TABLE `test` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-07-26  0:15:07
+-- Dump completed on 2015-09-13 22:20:14
