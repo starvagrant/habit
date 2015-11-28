@@ -10,41 +10,55 @@ require 'habit-cron.php';
 
 class HabitTest extends PHPUnit_Framework_TestCase
 {
-	public function test1()
+	public $json;
+	public $jsonObject;
+	public $stashed;
+
+	public function test_json_is_stored(){
+		$this->json = array('test' => 'test');
+		$this->stashed = stash_json($this->json, 'test.json');
+		$this->assertTrue(isset($this->stashed));
+	}
+
+	public function test_file_is_json(){
+		$this->jsonObject = get_json_object('test.json');
+		$this->assertTrue(isset($this->jsonObject));
+	}
+	public function test_urgency_max_value()
 	{
 	$this->assertLessThanOrEqual(2, urgent());
 	}
 
-	public function test2()
+	public function test_urgency_min_value()
 	{
 	$this->assertGreaterThanOrEqual(1.95, urgent());
 	}
 
-	public function test3()
+	public function test_daily_max_value()
 	{
 	$this->assertLessThanOrEqual(1, daily());
 	}
 
-	public function test4()
+	public function test_daily_min_value()
 	{
 	$this->assertGreaterThanOrEqual(1, daily());
 	}
 
-	public function test5()
+	public function test_weekly_max_value()
 	{
 	$this->assertLessThanOrEqual((1/7), weekly());
 	}
 
-	public function test6()
+	public function test_weekly_min_value()
 	{
 	$this->assertGreaterThanOrEqual((1/8), weekly());
 	}
 
-	public function test7()
+	public function test_monthly_max_value()
 	{
 	$this->assertLessThanOrEqual((1/30), monthly()); 
 	}
-	public function test8()
+	public function test_monthly_min_value()
 	{
 	$this->assertGreaterThanOrEqual((1/31), monthly()); 
 	}
