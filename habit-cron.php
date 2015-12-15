@@ -1,7 +1,6 @@
 <?php
-$habitJsonObject = get_json_object('habit.json');
 
-var_dump($habitJsonObject);
+$habitJsonObject = get_json_object('habit.json');
 
 foreach($habitJsonObject['urgent'] as $key => $value){
 	$habitJsonObject['urgent'][$key] = urgent($value);
@@ -18,48 +17,42 @@ foreach($habitJsonObject['weekly'] as $key => $value){
 foreach($habitJsonObject['monthly'] as $key => $value){
 	$habitJsonObject['monthly'][$key] = monthly($value);
 }
+// reseting a field.
+// $habitJsonObject = reset_field('urgent', 'dishes', $habitJsonObject);
 
-var_dump($habitJsonObject);
-// stash_json($habitJsonObject, 'habit.json');
+stash_json($habitJsonObject, 'habit.json');
+
+// not that I should need to reset a field (this script should only be called by cron)
+// but here's a function to do so.
+
+function reset_field($array, $key, $habitJsonObject){
+
+	$habitJsonObject[$array][$key] = 0;
+	return $habitJsonObject;
+}
 
 function get_json_object($file){
 	return json_decode(file_get_contents($file), TRUE);
 }
 
 function stash_json($json, $file){
-	return file_put_contents($file, json_encode($json));
+	return file_put_contents($file, json_encode($json);
 }
-
-/* Test Mods 1.029, 1, .92, 0.867 */
 
 function urgent($habit = 1){
-	// normally, habit should equal 1
-	for ($i = 0; $i < 24; $i++)
-	{
-		$habit *= 1.029;
-	}
+	$habit = $habit + (1 / 13); // 1 / 1 + 12
 	return $habit;
-
 }
 function daily($habit = 1){
-	for ($i = 0; $i < 24; $i++)
-	{
-		$habit *= 1;
-	}
+	$habit = $habit + (1 / 25); // 1 / 1 + 24 (hours per day)
 	return $habit;
 
 }
 function weekly($habit = 1){
-	for ($i = 0; $i < 24; $i++)
-	{
-		$habit *= 0.92;
-	}
+	$habit = $habit + (1/169); // 1 / 1 + 168 (hours per week)
 	return $habit;
 }
 function monthly($habit = 1){
-	for ($i = 0; $i < 24; $i++)
-	{
-		$habit *= 0.867;
-	}
+	$habit = $habit + (1/5041); // 1 / 1 + 5040 (hours per 30 days)
 	return $habit;
 }
