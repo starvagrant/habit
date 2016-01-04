@@ -8,7 +8,13 @@ function error_dump($var){
 	error_log($error);
 }
 function print_gradient_css_string($a) {	// four element numeric array
-	echo "background: linear-gradient(to right, rgba($a[0], $a[1], 0, 0.7), rgba($a[2], $a[3], 0, 1));";
+echo <<<_CSS
+		background: -webkit-linear-gradient(to left, rgba($a[0], $a[1], 0, 0.7), rgba($a[2], $a[3], 0, 1));
+		background: -o-linear-gradient(to left, rgba($a[0], $a[1], 0, 0.7), rgba($a[2], $a[3], 0, 1));
+		background: -moz-linear-gradient(to left, rgba($a[0], $a[1], 0, 0.7), rgba($a[2], $a[3], 0, 1));
+		background: linear-gradient(to left, rgba($a[0], $a[1], 0, 0.7), rgba($a[2], $a[3], 0, 1));
+
+_CSS;
 }
 
 function scores_to_gradient_arrays($int){
@@ -52,6 +58,39 @@ function scores_to_gradient_arrays($int){
 		break;
 	}
 }
+// same logic with scores as above, only to apply css classes 
+function scores_to_css_classes($float){
+	switch($float){
+		case 0: 
+			return "habit-complete";
+			break;
+		case ($float / 256 < 1): 						// 1 - 255	right gets greener
+			return "habit-green";
+		break;
+		case ($float / 256 < 2): 						// 256 - 511 solid green
+			return "habit-yellow-green";
+		break;
+		case ($float / 256 < 3): 						// 512 - 767 right gets yellower
+			return "habit-yellow";
+		break;
+		case ($float / 256 < 4):						// 767 - 1023 solid yellow
+			return "habit-yellow-orange";
+		break;
+		case ($float / 256 < 5): 						// 1024 - 1279 right gets redder
+			return "habit-orange";
+		break;
+		case ($float / 256 < 6):						// 1280 - 1535 solid red
+			return "habit-red";
+		break;
+		case ($float / 256 < 7):						// 1535 - 1792 darker red
+			return "habit-dark-red";
+		break;
+		default: 
+			return "habit-default";
+		break;
+	}
+
+}
 ?>
 <!DOCTYPE html>
 <html lang="en-us">
@@ -60,14 +99,18 @@ function scores_to_gradient_arrays($int){
 	<meta charset="utf-8" />
 <title>Habit Checker</title>
 <style>
-#habit-complete { <?php print_gradient_css_string(scores_to_gradient_arrays(0)); ?> }
-#habit-green{ <?php print_gradient_css_string(scores_to_gradient_arrays(256)); ?> }
-#habit-yellow-green { <?php print_gradient_css_string(scores_to_gradient_arrays(512)); ?>}
-#habit-yellow { <?php print_gradient_css_string(scores_to_gradient_arrays(768)); ?> }
-#habit-yellow-orange { <?php print_gradient_css_string(scores_to_gradient_arrays(1024)); ?> }
-#habit-orange { <?php print_gradient_css_string(scores_to_gradient_arrays(1280)); ?> }
-#habit-red { <?php print_gradient_css_string(scores_to_gradient_arrays(1536)); ?> }
-#habit-dark-red{ <?php print_gradient_css_string(scores_to_gradient_arrays(1791)); ?> }
+/*
+ * Current Styling Rules are Static, that is 8 possible values only
+ */
+.habit-complete { <?php print_gradient_css_string(scores_to_gradient_arrays(0)); ?> }
+.habit-green{ <?php print_gradient_css_string(scores_to_gradient_arrays(256)); ?> }
+.habit-yellow-green { <?php print_gradient_css_string(scores_to_gradient_arrays(512)); ?>}
+.habit-yellow { <?php print_gradient_css_string(scores_to_gradient_arrays(768)); ?> }
+.habit-yellow-orange { <?php print_gradient_css_string(scores_to_gradient_arrays(1024)); ?> }
+.habit-orange { <?php print_gradient_css_string(scores_to_gradient_arrays(1280)); ?> }
+.habit-red { <?php print_gradient_css_string(scores_to_gradient_arrays(1536)); ?> }
+.habit-dark-red{ <?php print_gradient_css_string(scores_to_gradient_arrays(1791)); ?> }
+.habit-default{ background: black; }
 table { 
   background: -webkit-linear-gradient(left, rgba(#ff0,0,0,0), rgba(#ff0,0,0,1)); /* For Safari 5.1 to 6.0 */
   background: -o-linear-gradient(right, rgba(255,0,0,0), rgba(255,0,0,1)); /* For Opera 11.1 to 12.0 */
@@ -86,25 +129,26 @@ table {
 // grab the two items from each array which are at highest value
 foreach($habit_json as $array_key => $habit_array){
 	$habit_array = $habit_array;
-	echo "<hr />";
-	var_dump($habit_array);
+	//echo "<hr />";
+	//var_dump($habit_array);
 	arsort($habit_array);
 	$habit_array = array_slice($habit_array, 0, 2);
 	$habit_json[$array_key] = $habit_array;
-	var_dump($habit_array);
+	//var_dump($habit_array);
 	echo "<hr />";
 }
 ?>
 
-<?php var_dump($habit_json); ?>
+<?php //var_dump($habit_json); ?>
 </pre>
 
 	<table>
 <?php foreach($habit_json as $array_keys => $habit_arrays):
 		foreach($habit_arrays as $habit => $habit_value):
+		$habit_css_class = scores_to_css_classes($habit_value);
 	echo <<<_TR
 		<tr>
-			<td>$habit</td>
+			<td class="$habit_css_class">$habit</td>
 			<td>$habit_value</td>
 		</tr>
 _TR;
