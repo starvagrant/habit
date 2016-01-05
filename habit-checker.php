@@ -109,7 +109,7 @@ function scores_to_css_classes($float){
 .habit-yellow-orange { <?php print_gradient_css_string(scores_to_gradient_arrays(1024)); ?> }
 .habit-orange { <?php print_gradient_css_string(scores_to_gradient_arrays(1280)); ?> }
 .habit-red { <?php print_gradient_css_string(scores_to_gradient_arrays(1536)); ?> }
-.habit-dark-red{ <?php print_gradient_css_string(scores_to_gradient_arrays(1791)); ?> }
+.habit-dark-red{ <?php print_gradient_css_string(scores_to_gradient_arrays(1792)); ?> }
 .habit-default{ background: black; }
 table { 
   background: -webkit-linear-gradient(left, rgba(#ff0,0,0,0), rgba(#ff0,0,0,1)); /* For Safari 5.1 to 6.0 */
