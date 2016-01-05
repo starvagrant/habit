@@ -36,23 +36,19 @@ function get_json_object($file){
 }
 
 function stash_json($json, $file){
-	return file_put_contents($file, json_encode($json);
+	return file_put_contents($file, json_encode($json));
 }
 
 function urgent($habit = 1){
-	$habit = $habit + (1 / 13); // 1 / 1 + 12
 	return $habit;
 }
 function daily($habit = 1){
-	$habit = $habit + (1 / 25); // 1 / 1 + 24 (hours per day)
 	return $habit;
 
 }
 function weekly($habit = 1){
-	$habit = $habit + (1/169); // 1 / 1 + 168 (hours per week)
 	return $habit;
 }
 function monthly($habit = 1){
-	$habit = $habit + (1/5041); // 1 / 1 + 5040 (hours per 30 days)
 	return $habit;
 }
