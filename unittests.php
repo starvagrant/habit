@@ -15,7 +15,7 @@ class HabitTest extends PHPUnit_Framework_TestCase
 	function habit_is  
 	*/
 	public function __construct(){
-		$this->habit = new Habit(0,0);
+		$this->habit = new Habit();
 	}	
 	public function testBecause(){
 		$this->assertTrue(0 === 0);
@@ -23,7 +23,6 @@ class HabitTest extends PHPUnit_Framework_TestCase
 	
 	// make sure the numbers to the urgent function match expectations
 	public function testHabitIsComplete(){
-		var_dump($this->habit);
 
 		$this->assertTrue($this->habit->getUrgency() === 0); // test urgency starts at zero
 		$this->assertTrue($this->habit->setUrgency(0) === 0);

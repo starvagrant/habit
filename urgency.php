@@ -11,13 +11,14 @@ class Habit
 	public $urgency;
 	public $time;
 
-	public function construct($urgency, $time){
-		$this->urgency = $urgency;
-		$this->time = $time;
+	public function __construct(){
+		$this->urgency = 0;
+		$this->time = 0;
 	}
 
 	public function setUrgency($time = 0){
 		$this->urgency += $time;
+		return $this->urgency;
 	}
 
 	public function getUrgency(){
