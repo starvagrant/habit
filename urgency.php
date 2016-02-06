@@ -1,27 +1,34 @@
 <?php
 class Habit
 {
-/*	
-	const URGENT = (1 / 14); // twice daily
-	const DAILY = 1/7; // daily
-	const WEEKLY = 1;
-	const MONTHLY = 4;
-*/
+	const L1_THRESHOLD = 256; // numbers, multiples of 256, represent colors for CSS properties.
+	const L2_THRESHOLD = 512;
+	const L3_THRESHOLD = 768;
+	const L4_THRESHOLD = 1024;
+	const L5_THRESHOLD = 1280;
+	const L6_THRESHOLD = 1536;
+	const L7_THRESHOLD = 1792;
 
 	public $urgency;
 	public $time;
+	public $interval;
 
-	public function __construct(){
+	public function __construct(DateInterval $interval){
+
 		$this->urgency = 0;
-		$this->time = 0;
 	}
 
-	public function setUrgency($time = 0){
-		$this->urgency += $time;
+	public function addUrgency($urgency = 0){
+		$this->urgency += $urgency;
 		return $this->urgency;
 	}
 
 	public function getUrgency(){
+		return $this->urgency;
+	}
+
+	public function setUrgency($urgency = 0){
+		$this->urgency = $urgency;
 		return $this->urgency;
 	}
 }
