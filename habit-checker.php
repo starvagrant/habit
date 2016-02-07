@@ -1,16 +1,10 @@
 <?php 
-//require 'urgency.php';
+//require 'debugging_functions.php'
+require 'urgency.php';
 
-//$habit = new Habit(new DateInterval('P1D'));
+$dailyHabit = new Habit(new DateInterval('P1D'));
 
-function error_dump($var){
-	ob_start();
-	var_dump($var);
-	$error = ob_get_contents();
-	ob_end_clean();
-	error_log($error);
-}
-function print_gradient_css_string(array $a) {	// four element numeric array
+function toGradientCss(array $a) {	// four element numeric array
 echo <<<_CSS
 		background: -webkit-linear-gradient(to left, rgba($a[0], $a[1], 0, 0.7), rgba($a[2], $a[3], 0, 1));
 		background: -o-linear-gradient(to left, rgba($a[0], $a[1], 0, 0.7), rgba($a[2], $a[3], 0, 1));
@@ -20,7 +14,7 @@ echo <<<_CSS
 _CSS;
 }
 
-function scores_to_gradient_arrays($int){
+function scoresToGradients($int){
 	// based on the integer fed to it, returns an array for color gradient: red, green, red, green
 	// the result being a progression from black to green to dark red, as the integer gets higher	
 	switch($int){
@@ -56,7 +50,7 @@ function scores_to_gradient_arrays($int){
 	}
 }
 // same logic with scores as above, only to apply css classes 
-function scores_to_css_classes($int){
+function scoresToClasses($int){
 	switch($int){
 		case 0: 
 			return "habit-complete";
@@ -101,14 +95,14 @@ function scores_to_css_classes($int){
 /*
  * Current Styling Rules are Static, that is 8 possible values only
  */
-.habit-complete { <?php print_gradient_css_string(scores_to_gradient_arrays(1)); ?> }
-.habit-green{ <?php print_gradient_css_string(scores_to_gradient_arrays(2)); ?> }
-.habit-yellow-green { <?php print_gradient_css_string(scores_to_gradient_arrays(3)); ?>}
-.habit-yellow { <?php print_gradient_css_string(scores_to_gradient_arrays(4)); ?> }
-.habit-yellow-orange { <?php print_gradient_css_string(scores_to_gradient_arrays(5)); ?> }
-.habit-orange { <?php print_gradient_css_string(scores_to_gradient_arrays(6)); ?> }
-.habit-red { <?php print_gradient_css_string(scores_to_gradient_arrays(7)); ?> }
-.habit-dark-red{ <?php print_gradient_css_string(scores_to_gradient_arrays(8)); ?> }
+.habit-complete { <?php toGradientCss(scoresToGradients(1)); ?> }
+.habit-green{ <?php toGradientCss(scoresToGradients(2)); ?> }
+.habit-yellow-green { <?php toGradientCss(scoresToGradients(3)); ?>}
+.habit-yellow { <?php toGradientCss(scoresToGradients(4)); ?> }
+.habit-yellow-orange { <?php toGradientCss(scoresToGradients(5)); ?> }
+.habit-orange { <?php toGradientCss(scoresToGradients(6)); ?> }
+.habit-red { <?php toGradientCss(scoresToGradients(7)); ?> }
+.habit-dark-red{ <?php toGradientCss(scoresToGradients(8)); ?> }
 .habit-nil{ background: black; }
 .habit-default { background: blue;}
 </style>
@@ -121,7 +115,7 @@ function scores_to_css_classes($int){
 	<table>
 <?php for ($i = 0; $i < 9; $i++)
 	{
-	$habit_class = scores_to_css_classes($i);
+	$habit_class = scoresToClasses($i);
 	echo <<<_TR
 		<tr>
 			<td class="$habit_class">habit</td>
