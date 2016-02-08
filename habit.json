@@ -1,1 +1,11 @@
-{"urgent":{"dishes":0.15384615384615,"oven":1.4615384615386,"stop distraction":1.4615384615386,"list more habits":1.4615384615386},"daily":{"desk":0.76,"library":0.76,"code-kata":0.76},"weekly":{"finances":0.11242603550296},"monthly":[]}
+[
+	{"Habit": "Reflection in Git", "DateTime":"2016-02-08 12:34:00"},
+	{"Habit": "Programming Exercises", "DateTime":"2016-02-08 12:34:00"},
+	{"Habit": "Novel Review", "DateTime":"2016-02-08 12:34:00"},
+	{"Habit": "Financial Tracking", "DateTime":"2016-02-08 12:34:00"},
+	{"Habit": "Medicine", "DateTime":"2016-02-08 12:34:00"},
+	{"Habit": "Wash Dishes", "DateTime":"2016-02-08 12:34:00"},
+	{"Habit": "Clear Desk", "DateTime":"2016-02-08 12:34:00"},
+	{"Habit": "Avoid Distractions", "DateTime":"2016-02-08 12:34:00"},
+	{"Habit": "Career Skills", "DateTime":"2016-02-08 12:34:00"}
+]

@@ -9,7 +9,7 @@ class HabitTest extends PHPUnit_Framework_TestCase
 	*/
 	public function __construct()
 	{
-		$this->habit = new Habit(new DateInterval('P1Y'), new DateTime('now'));
+		$this->habit = new Habit('{"json":"a"}', new DateInterval('P1Y'));
 	}	
 	
 	// make sure the numbers to the urgent function match expectations
@@ -29,25 +29,28 @@ class HabitTest extends PHPUnit_Framework_TestCase
 	// The Habit Class, independent of how it is implemented.
 	public function testHabitLevelOne()
 	{
-		$this->assertLessThan(Habit::L1_THRESHOLD, $this->habit->addUrgency(255));
+		$this->assertGreaterthanOrEqual(Habit::L1_THRESHOLD, $this->habit->addUrgency(1));
 	}
 
 	public function testHabitLevelTwo(){
-		$this->assertLessThan(Habit::L2_THRESHOLD, $this->habit->addUrgency(511));
+		$this->assertGreaterThanOrEqual(Habit::L2_THRESHOLD, $this->habit->addUrgency(2));
 	}
 	public function testHabitLevelThree(){
-		$this->assertLessThan(Habit::L3_THRESHOLD, $this->habit->addUrgency(767));
+		$this->assertGreaterThanOrEqual(Habit::L3_THRESHOLD, $this->habit->addUrgency(3));
 	}
 	public function testHabitLevelFour(){
-		$this->assertLessThan(Habit::L4_THRESHOLD, $this->habit->addUrgency(1023));
+		$this->assertGreaterThanOrEqual(Habit::L4_THRESHOLD, $this->habit->addUrgency(4));
 	}
 	public function testHabitLevelFive(){
-		$this->assertLessThan(Habit::L5_THRESHOLD, $this->habit->addUrgency(1279));
+		$this->assertGreaterThanOrEqual(Habit::L5_THRESHOLD, $this->habit->addUrgency(5));
 	}
 	public function testHabitLevelSix(){
-		$this->assertLessThan(Habit::L6_THRESHOLD, $this->habit->addUrgency(1535));
+		$this->assertGreaterThanOrEqual(Habit::L6_THRESHOLD, $this->habit->addUrgency(6));
 	}
 	public function testHabitLevelSeven(){
-		$this->assertLessThan(Habit::L7_THRESHOLD, $this->habit->addUrgency(1791));
+		$this->assertGreaterThanOrEqual(Habit::L7_THRESHOLD, $this->habit->addUrgency(7));
+	}
+	public function testHabitArrayContainsDefinedKeys(){
+		$this->assertArrayHasKey('json', $this->habit->habitArray); 	
 	}
 }

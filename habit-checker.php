@@ -1,11 +1,23 @@
 <?php 
 //require 'debugging_functions.php'
 require 'urgency.php';
+$json = file_get_contents('habit.json');
+$fileJson = json_decode($json, true);
+//foreach($fileJson as $habits) 
+$dailyHabits[] = new Habit('{"Habit": "Reflection in Git", "DateTime":"2016-02-08 12:34:00"}', new DateInterval('P1D'));
+$dailyHabits[] = new Habit('{"Habit": "Programming Exercises", "DateTime":"2016-02-08 12:34:00"}', new DateInterval('P1D'));
+$dailyHabits[] = new Habit('{"Habit": "Novel Review", "DateTime":"2016-02-08 12:34:00"}', new DateInterval('P1D'));
+$dailyHabits[] = new Habit('{"Habit": "Financial Tracking", "DateTime":"2016-02-08 12:34:00"}', new DateInterval('P1D'));
+$dailyHabits[] = new Habit('{"Habit": "Medicine", "DateTime":"2016-02-08 12:34:00"}', new DateInterval('P1D'));
+$dailyHabits[] = new Habit('{"Habit": "Wash Dishes", "DateTime":"2016-02-08 12:34:00"}', new DateInterval('P1D'));
+$dailyHabits[] = new Habit('{"Habit": "Clear Desk", "DateTime":"2016-02-08 12:34:00"}', new DateInterval('P1D'));
+$dailyHabits[] = new Habit('{"Habit": "Avoid Distractions", "DateTime":"2016-02-08 12:34:00"}', new DateInterval('P1D'));
+$dailyHabits[] = new Habit('{"Habit": "Career Skills", "DateTime":"2016-02-08 12:34:00"}', new DateInterval('P1D'));
 
-$dailyHabit = new Habit(new DateInterval('P1D'));
-
-function toGradientCss(array $a) {	// four element numeric array
+function toGradientCss(array $a) 
+{	// four element numeric array $a[0] left red, $a[1] left green, $a[2] right red, $a[3] rigit green
 echo <<<_CSS
+		
 		background: -webkit-linear-gradient(to left, rgba($a[0], $a[1], 0, 0.7), rgba($a[2], $a[3], 0, 1));
 		background: -o-linear-gradient(to left, rgba($a[0], $a[1], 0, 0.7), rgba($a[2], $a[3], 0, 1));
 		background: -moz-linear-gradient(to left, rgba($a[0], $a[1], 0, 0.7), rgba($a[2], $a[3], 0, 1));
@@ -14,7 +26,8 @@ echo <<<_CSS
 _CSS;
 }
 
-function scoresToGradients($int){
+function scoresToGradients($int)
+{
 	// based on the integer fed to it, returns an array for color gradient: red, green, red, green
 	// the result being a progression from black to green to dark red, as the integer gets higher	
 	switch($int){
@@ -50,7 +63,8 @@ function scoresToGradients($int){
 	}
 }
 // same logic with scores as above, only to apply css classes 
-function scoresToClasses($int){
+function scoresToClasses($int)
+{
 	switch($int){
 		case 0: 
 			return "habit-complete";
@@ -95,33 +109,36 @@ function scoresToClasses($int){
 /*
  * Current Styling Rules are Static, that is 8 possible values only
  */
-.habit-complete { <?php toGradientCss(scoresToGradients(1)); ?> }
-.habit-green{ <?php toGradientCss(scoresToGradients(2)); ?> }
-.habit-yellow-green { <?php toGradientCss(scoresToGradients(3)); ?>}
-.habit-yellow { <?php toGradientCss(scoresToGradients(4)); ?> }
-.habit-yellow-orange { <?php toGradientCss(scoresToGradients(5)); ?> }
-.habit-orange { <?php toGradientCss(scoresToGradients(6)); ?> }
-.habit-red { <?php toGradientCss(scoresToGradients(7)); ?> }
-.habit-dark-red{ <?php toGradientCss(scoresToGradients(8)); ?> }
+.habit-complete { <?php toGradientCss(scoresToGradients(0)); ?> }
+.habit-green{ <?php toGradientCss(scoresToGradients(1)); ?> }
+.habit-yellow-green { <?php toGradientCss(scoresToGradients(2)); ?>}
+.habit-yellow { <?php toGradientCss(scoresToGradients(3)); ?> }
+.habit-yellow-orange { <?php toGradientCss(scoresToGradients(4)); ?> }
+.habit-orange { <?php toGradientCss(scoresToGradients(5)); ?> }
+.habit-red { <?php toGradientCss(scoresToGradients(6)); ?> }
+.habit-dark-red{ <?php toGradientCss(scoresToGradients(7)); ?> }
 .habit-nil{ background: black; }
 .habit-default { background: blue;}
 </style>
 </head>
 <body>
-<pre>
-
-</pre>
-
 	<table>
-<?php for ($i = 0; $i < 9; $i++)
-	{
-	$habit_class = scoresToClasses($i);
-	echo <<<_TR
+<?php 
+	$i = 0;
+	foreach ($dailyHabits as $habitkey => $habitvalue):
+	$habit_class = scoresToClasses($habitvalue->addUrgency($i)); 
+	$i++;
+	$completion = $habitvalue->habitCompletionTime->format('Y-m-d H:i:s');
+	var_dump($completion);
+		$now = date('Y-m-d H:i:s');
+		echo <<<_TR
 		<tr>
-			<td class="$habit_class">habit</td>
+			<td class="$habit_class"> $habitvalue->habitName</td>
+			<td class="$habit_class"> Was lasted completed $completion </td>
+			<td class="$habit_class"> But it is now $now </td>
 		</tr>
 _TR;
-	}	
+	endforeach;		
 	
 ?>
 	</table>
