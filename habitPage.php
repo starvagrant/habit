@@ -1,27 +1,27 @@
-<?php 
+<?php
 //require 'debugging_functions.php'
-require 'urgency.php';
+require 'habitClass.php';
 $json = file_get_contents('habit.json');
 $fileJson = json_decode($json, true);
-//foreach($fileJson as $habits) 
-$dailyHabits[] = new Habit('{"Habit": "Reflection in Git", "DateTime":"2016-02-08 12:34:00"}', new DateInterval('P1D'));
-$dailyHabits[] = new Habit('{"Habit": "Programming Exercises", "DateTime":"2016-02-08 12:34:00"}', new DateInterval('P1D'));
-$dailyHabits[] = new Habit('{"Habit": "Novel Review", "DateTime":"2016-02-08 12:34:00"}', new DateInterval('P1D'));
-$dailyHabits[] = new Habit('{"Habit": "Financial Tracking", "DateTime":"2016-02-08 12:34:00"}', new DateInterval('P1D'));
-$dailyHabits[] = new Habit('{"Habit": "Medicine", "DateTime":"2016-02-08 12:34:00"}', new DateInterval('P1D'));
-$dailyHabits[] = new Habit('{"Habit": "Wash Dishes", "DateTime":"2016-02-08 12:34:00"}', new DateInterval('P1D'));
-$dailyHabits[] = new Habit('{"Habit": "Clear Desk", "DateTime":"2016-02-08 12:34:00"}', new DateInterval('P1D'));
-$dailyHabits[] = new Habit('{"Habit": "Avoid Distractions", "DateTime":"2016-02-08 12:34:00"}', new DateInterval('P1D'));
-$dailyHabits[] = new Habit('{"Habit": "Career Skills", "DateTime":"2016-02-08 12:34:00"}', new DateInterval('P1D'));
+//foreach($fileJson as $habits)
+$dailyHabits[] = new Habit('{"habit": "Reflection in Git", "timestamp":"1454271192"}');
+$dailyHabits[] = new Habit('{"habit": "Programming Exercises", "timestamp":"1454271192"}');
+$dailyHabits[] = new Habit('{"habit": "Novel Review", "timestamp":"1454271192"}');
+$dailyHabits[] = new Habit('{"habit": "Financial Tracking", "timestamp":"1454271192"}');
+$dailyHabits[] = new Habit('{"habit": "Medicine", "timestamp":"1454271192"}');
+$dailyHabits[] = new Habit('{"habit": "Wash Dishes", "timestamp":"1454271192"}');
+$dailyHabits[] = new Habit('{"habit": "Clear Desk", "timestamp":"1454271192"}');
+$dailyHabits[] = new Habit('{"habit": "Avoid Distractions", "timestamp":"1454271192"}');
+$dailyHabits[] = new Habit('{"habit": "Career Skills", "timestamp":"1454271192"}');
 
-function toGradientCss(array $a) 
+function toGradientCss(array $a)
 {	// four element numeric array $a[0] left red, $a[1] left green, $a[2] right red, $a[3] rigit green
 echo <<<_CSS
 		
-		background: -webkit-linear-gradient(to left, rgba($a[0], $a[1], 0, 0.7), rgba($a[2], $a[3], 0, 1));
-		background: -o-linear-gradient(to left, rgba($a[0], $a[1], 0, 0.7), rgba($a[2], $a[3], 0, 1));
-		background: -moz-linear-gradient(to left, rgba($a[0], $a[1], 0, 0.7), rgba($a[2], $a[3], 0, 1));
-		background: linear-gradient(to left, rgba($a[0], $a[1], 0, 0.7), rgba($a[2], $a[3], 0, 1));
+		background: -webkit-linear-gradient(to right, rgba($a[0], $a[1], 0, 0.7), rgba($a[2], $a[3], 0, 1));
+		background: -o-linear-gradient(to right, rgba($a[0], $a[1], 0, 0.7), rgba($a[2], $a[3], 0, 1));
+		background: -moz-linear-gradient(to right, rgba($a[0], $a[1], 0, 0.7), rgba($a[2], $a[3], 0, 1));
+		background: linear-gradient(to right, rgba($a[0], $a[1], 0, 0.7), rgba($a[2], $a[3], 0, 1));
 
 _CSS;
 }
@@ -31,7 +31,7 @@ function scoresToGradients($int)
 	// based on the integer fed to it, returns an array for color gradient: red, green, red, green
 	// the result being a progression from black to green to dark red, as the integer gets higher	
 	switch($int){
-		case 0: 
+		case 0:
 			return array(0,0,0,0);
 			break;
 		case 1:
@@ -55,18 +55,18 @@ function scoresToGradients($int)
 		case 7:						//  darker red
 			return array(127, 0, 127, 0);
 		break;
-		case 8: 
+		case 8:
 			return array(0, 0, 0, 0); // black
-		default: 
+		default:
 			return array(0, 0, 255, 0);  // black to red
 		break;
 	}
 }
-// same logic with scores as above, only to apply css classes 
+// same logic with scores as above, only to apply css classes
 function scoresToClasses($int)
 {
 	switch($int){
-		case 0: 
+		case 0:
 			return "habit-complete";
 			break;
 		case 1: 						// 1 - 255	right gets greener
@@ -92,7 +92,7 @@ function scoresToClasses($int)
 		break;
 		case 8:
 			return "habit-nil"; // plus 2048 habit grows black
-		default: 
+		default:
 			return "habit-default";
 		break;
 	}
@@ -123,19 +123,19 @@ function scoresToClasses($int)
 </head>
 <body>
 	<table>
-<?php 
+<?php
 	$i = 0;
-	foreach ($dailyHabits as $habitkey => $habitvalue):
-	$habit_class = scoresToClasses($habitvalue->addUrgency($i)); 
+	foreach ($dailyHabits as $habit):
+	$habit_class = scoresToClasses($i); // urgency should be calculated, method needs refactoring
 	$i++;
-	$completion = $habitvalue->habitCompletionTime->format('Y-m-d H:i:s');
-	var_dump($completion);
-		$now = date('Y-m-d H:i:s');
+	$lastCompleted = DateTime::CreateFromFormat('U', $habit->timestamp)->format('m/d H:i');
+	$currentDate = DateTime::CreateFromFormat('U', $habit->now)->format('m/d H:i');
 		echo <<<_TR
 		<tr>
-			<td class="$habit_class"> $habitvalue->habitName</td>
-			<td class="$habit_class"> Was lasted completed $completion </td>
-			<td class="$habit_class"> But it is now $now </td>
+			<td class="$habit_class"> $habit->habitName</td>
+			<td class="$habit_class"> $lastCompleted </td>
+			<td class="$habit_class"> $currentDate</td>
+			<td><button>Mark as Complete</button></td>
 		</tr>
 _TR;
 	endforeach;		

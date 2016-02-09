@@ -1,11 +1,11 @@
 [
-	{"Habit": "Reflection in Git", "DateTime":"2016-02-08 12:34:00"},
-	{"Habit": "Programming Exercises", "DateTime":"2016-02-08 12:34:00"},
-	{"Habit": "Novel Review", "DateTime":"2016-02-08 12:34:00"},
-	{"Habit": "Financial Tracking", "DateTime":"2016-02-08 12:34:00"},
-	{"Habit": "Medicine", "DateTime":"2016-02-08 12:34:00"},
-	{"Habit": "Wash Dishes", "DateTime":"2016-02-08 12:34:00"},
-	{"Habit": "Clear Desk", "DateTime":"2016-02-08 12:34:00"},
-	{"Habit": "Avoid Distractions", "DateTime":"2016-02-08 12:34:00"},
-	{"Habit": "Career Skills", "DateTime":"2016-02-08 12:34:00"}
+	{"habit": "Reflection in Git", "timestamp":"1454271192"},
+	{"habit": "Programming Exercises", "timestamp":"1454271192"},
+	{"habit": "Novel Review", "timestamp":"1454271192"},
+	{"habit": "Financial Tracking", "timestamp":"1454271192"},
+	{"habit": "Medicine", "timestamp":"1454271192"},
+	{"habit": "Wash Dishes", "timestamp":"1454271192"},
+	{"habit": "Clear Desk", "timestamp":"1454271192"},
+	{"habit": "Avoid Distractions", "timestamp":"1454271192"},
+	{"habit": "Career Skills", "timestamp":"1454271192"}
 ]
