@@ -17,13 +17,20 @@ class HabitTest extends PHPUnit_Framework_TestCase
 	// make sure the numbers to the urgent function match expectations
 	public function testHabitNotComplete()
 	{
-		$this->assertGreaterThan(0, $this->habit->getSeconds()); // get seconds should be a nonzero positive.
+		$this->assertGreaterThan(0, $this->habit->secondsSinceCompletion); // get seconds should be a nonzero positive.
 	}
 
 	public function testHabitIsComplete()
 	{
 		$this->habit->markHabitComplete();
-		$this->assertEquals(0, $this->habit->getSeconds()); // get seconds should equal zero if habit is completed
+		$this->assertEquals(0, $this->habit->secondsSinceCompletion); // get seconds should equal zero if habit is completed
+	}
+
+	public function testDailyUrgency()
+	{
+		$this->assertEquals(0, $this->habit->dailyUrgency(0));
+		$this->assertEquals(8, $this->habit->dailyUrgency(345601)); // second over four days
+		$this->assertEquals(2, $this->habit->dailyUrgency(86399)); // second under day.
 	}
 
 	public function testHabitArrayContainsDefinedKeys(){
