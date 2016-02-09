@@ -17,6 +17,7 @@ class Habit
 		$this->habitName = $this->habitArray['habit'];
 		$this->timestamp = $this->habitArray['timestamp'];
 		$this->secondsSinceCompletion = $this->now - $this->timestamp;
+//		$this->secondsSinceCompletion = 4400; // make all habits less than 6 hours.
 	}
 
 	public function markHabitComplete()

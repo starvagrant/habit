@@ -122,11 +122,14 @@ function scoresToClasses($int)
 </style>
 </head>
 <body>
+<form action="" id="habit-form">
 	<table>
 <?php
 	$i = 0;
 	foreach ($dailyHabits as $habit):
-	$habit_class = scoresToClasses($i); // urgency should be calculated, method needs refactoring
+	$urgency = $habit->dailyUrgency($habit->secondsSinceCompletion);
+	$habit_class = scoresToClasses($urgency); // urgency should be calculated, method needs refactoring
+//	$habit_class = scoresToClasses($i); // urgency should be calculated, method needs refactoring
 	$i++;
 	$lastCompleted = DateTime::CreateFromFormat('U', $habit->timestamp)->format('m/d H:i');
 	$currentDate = DateTime::CreateFromFormat('U', $habit->now)->format('m/d H:i');
@@ -136,11 +139,15 @@ function scoresToClasses($int)
 			<td class="$habit_class"> $lastCompleted </td>
 			<td class="$habit_class"> $currentDate</td>
 			<td><button>Mark as Complete</button></td>
+			<input type="hidden" name="newCompletionTimestamp" value="$habit->now" />
 		</tr>
 _TR;
 	endforeach;		
 	
 ?>
 	</table>
+</form>
+	<script src="jquery-1.11.0.js"></script>
+	<script src="habitPageAjax.js"></script>
 </body>
 </html>
