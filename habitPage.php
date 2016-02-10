@@ -1,11 +1,8 @@
 <?php
 //require 'debugging_functions.php'
 require 'habitClass.php';
-//$json = file_get_contents('habit.json');
-//$fileJson = json_decode($json, true);
-//foreach($fileJson as $habits)
 
-try 
+try // connect to database
 {
 	$dsn = "sqlite:/var/www/habit/.ht.habit.sqlite";
 	$habitPDO = new PDO($dsn);
@@ -16,7 +13,7 @@ catch (PDOException $e)
 	$error = "PDO_ERROR_1:" . $e->getMessage;
 	error_log($error);
 }
-try
+try // fetch data into arrays
 {
 	$sql = "SELECT * FROM habits";
 	$statement = $habitPDO->prepare($sql);
@@ -26,25 +23,15 @@ try
 		$dailyHabits[] = new Habit(array("name" => $result['name'], "lastCompleted" => $result['lastCompleted']));	
 	}
 }
+
 catch (PDOException $e)
 {
 	$error = "PDO_ERROR_2:" . $e->getMessage;
 	error_log($error);
 }
-/*
-$dailyHabits[] = new Habit(["name" => "Reflection in Git", "timestamp" => 1454271192]);
-$dailyHabits[] = new Habit(["name" => "Programming Exercises", "timestamp" => 1454271192]);
-$dailyHabits[] = new Habit(["name" => "Novel Review", "timestamp" => 1454271192]);
-$dailyHabits[] = new Habit(["name" => "Financial Tracking", "timestamp" => 1454271192]);
-$dailyHabits[] = new Habit(["name" => "Medicine", "timestamp" => 1454271192]);
-$dailyHabits[] = new Habit(["name" => "Wash Dishes", "timestamp" => 1454271192]);
-$dailyHabits[] = new Habit(["name" => "Clear Desk", "timestamp" => 1454271192]);
-$dailyHabits[] = new Habit(["name" => "Avoid Distractions", "timestamp" => 1454271192]);
-$dailyHabits[] = new Habit(["name" => "Career Skills", "timestamp" => 1454271192]);
- */
 
-function toGradientCss(array $a)
-{	// four element numeric array $a[0] left red, $a[1] left green, $a[2] right red, $a[3] rigit green
+function toGradientCss(array $a) // four element numeric array $a[0] left red, $a[1] left green, $a[2] right red, $a[3] rigit green
+{	
 echo <<<_CSS
 		
 		background: -webkit-linear-gradient(to right, rgba($a[0], $a[1], 0, 0.7), rgba($a[2], $a[3], 0, 1));
@@ -156,20 +143,11 @@ function scoresToClasses($int)
 <?php
 	$i = 0;
 	foreach ($dailyHabits as $habit):
-	/*
-		echo <<<_TR
-		<tr>
-			<td> $habit->habitName </td>
-			<td> $habit->timestamp </td>
-		</tr>
-_TR;
-	*/
-	$urgency = $habit->dailyUrgency($habit->secondsSinceCompletion);
-	$habit_class = scoresToClasses($urgency); // urgency should be calculated, method needs refactoring
-//	$habit_class = scoresToClasses($i); // urgency should be calculated, method needs refactoring
-	$i++;
-	$lastCompleted = DateTime::CreateFromFormat('U', $habit->timestamp)->format('m/d H:i');
-	$currentDate = DateTime::CreateFromFormat('U', $habit->now)->format('m/d H:i');
+		$urgency = $habit->dailyUrgency($habit->secondsSinceCompletion);
+		$habit_class = scoresToClasses($urgency); // urgency should be calculated, method needs refactoring
+		$i++;
+		$lastCompleted = DateTime::CreateFromFormat('U', $habit->timestamp)->format('m/d H:i');
+		$currentDate = DateTime::CreateFromFormat('U', $habit->now)->format('m/d H:i');
 
 	// Table Rows give name of habit, its last completion, and the time the form has been generated
 	// Only Clientside JS can give when the item is actually submitted. 
@@ -179,8 +157,12 @@ _TR;
 			<td class="$habit_class"> $lastCompleted </td>
 			<td class="$habit_class"> $currentDate</td>
 			<td><button>Mark as Complete</button></td>
-			<input type="hidden" name="formCreated$i" value="$habit->now" />
+			<td>
+				<input type="hidden" name="formCreated" value="$habit->now" />
+				<input type="hidden" name="habit" value="$habit->habitName" />
+			</td>
 		</tr>
+
 _TR;
 endforeach;	
 	
