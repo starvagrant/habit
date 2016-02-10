@@ -10,7 +10,6 @@ class HabitTest extends PHPUnit_Framework_TestCase
 	public function __construct()
 	{
 		$this->now = new DateTime;
-		$this->nowJsonValue = $this->now->format('Y-m-d H:i:s');
 		$this->habit = new Habit('{"habit": "Reflection in Git", "timestamp":"1454271192"}');
 	}
 
@@ -34,7 +33,7 @@ class HabitTest extends PHPUnit_Framework_TestCase
 	}
 
 	public function testHabitArrayContainsDefinedKeys(){
-		$this->assertArrayHasKey('habit', $this->habit->habitArray);
+		$this->assertArrayHasKey('name', $this->habit->habitArray);
 		$this->assertArrayHasKey('timestamp', $this->habit->habitArray);
 	}
 }

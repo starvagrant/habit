@@ -1,21 +1,18 @@
 <?php
 class Habit
 {
-	public $habitJson;
 	public $habitArray;
-
 	public $habitName;
 	public $now;
 	public $timestamp;
 	public $secondsSinceCompletion;
 
-	public function __construct($habitJson)
+	public function __construct(array $habitArray)
 	{
-		$this->habitArray = json_decode($habitJson, true);
-		if (!$this->habitArray) throw New Exception("invalid Json: \n $habitJson \n  provided");
+		$this->habitArray = $habitArray;
 		$this->now = time();
-		$this->habitName = $this->habitArray['habit'];
-		$this->timestamp = $this->habitArray['timestamp'];
+		$this->habitName = $this->habitArray['name'];
+		$this->timestamp = $this->habitArray['lastCompleted'];
 		$this->secondsSinceCompletion = $this->now - $this->timestamp;
 //		$this->secondsSinceCompletion = 4400; // make all habits less than 6 hours.
 	}
