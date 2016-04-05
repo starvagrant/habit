@@ -1,23 +1,24 @@
 <?php
-//	error_log($_POST['habit']);
-//require 'debugging_functions.php'
+/*
+ * process form data from habitPageAjax.js
+*/
 
 try // connect to database
 {
 	$dsn = "sqlite:/var/www/habit/.ht.habit.sqlite";
-	$habitPDO = new PDO($dsn);
-	$habitPDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} 
+	$pdo = new PDO($dsn);
+	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+}
 catch (PDOException $e)
 {
 	$error = "PDO_ERROR_1:" . $e->getMessage;
 	error_log($error);
 }
-try // fetch data into arrays
+
+try // update database
 {
 	$sql = "UPDATE habits SET lastCompleted=? WHERE name=?";
-	$statement = $habitPDO->prepare($sql);
-	error_log($_POST['lastCompleted']);
+	$statement = $pdo->prepare($sql);
 	$lastCompleted = (int)$_POST['timestamp'];
 	if (!$statement->bindParam(1, $lastCompleted)) throw New PDOException("Parameter Not Bound");
 	if (!$statement->bindParam(2, $_POST['habit'])) throw New PDOException("Parameter Not Bound");
@@ -30,4 +31,5 @@ catch (PDOException $e)
 	error_log($error);
 }
 
+unset($pdo);
 ?>

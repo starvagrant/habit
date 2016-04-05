@@ -1,26 +1,30 @@
 <?php
-//require 'debugging_functions.php'
 require 'habitClass.php';
 
-try // connect to database
+/*
+ *	Put the habits listed in the sqlite database into objects
+ *	of the class habit, as defined in habitClass.php
+*/
+
+try
 {
 	$dsn = "sqlite:/var/www/habit/.ht.habit.sqlite";
 	$habitPDO = new PDO($dsn);
 	$habitPDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} 
+}
 catch (PDOException $e)
 {
 	$error = "PDO_ERROR_1:" . $e->getMessage;
 	error_log($error);
 }
-try // fetch data into arrays
+try
 {
 	$sql = "SELECT * FROM habits";
 	$statement = $habitPDO->prepare($sql);
 	if (!$statement->execute()) throw New PDOException("Statement Not Executed");
 	while ($result = $statement->fetch(PDO::FETCH_ASSOC))
 	{
-		$dailyHabits[] = new Habit(array("name" => $result['name'], "lastCompleted" => $result['lastCompleted']));	
+		$dailyHabits[] = new Habit(array("name" => $result['name'], "lastCompleted" => $result['lastCompleted']));
 	}
 }
 
@@ -32,10 +36,21 @@ catch (PDOException $e)
 
 unset($habitPDO);
 
+/*
+ *	The habits are represented as text with css gradient backgrounds.
+ *	The following function produces that Css, with prefixes for older browsers.
+ *	This is the program's 'view' in MVC terminology.
+ *	The program adapts the following color scheme:
+ *		- A recently completed habit transitions from black to green.
+ *		Black means unimportant. Transition to green makes habit readable.
+ *		- As habit urgency increases, the transition goes from green to dark red
+ *		- A habit is considered unimportant after a while, in which case the color goes solid black
+ */
+
 function toGradientCss(array $a) // four element numeric array $a[0] left red, $a[1] left green, $a[2] right red, $a[3] rigit green
-{	
+{
 echo <<<_CSS
-		
+
 		background: -webkit-linear-gradient(to right, rgba($a[0], $a[1], 0, 0.7), rgba($a[2], $a[3], 0, 1));
 		background: -o-linear-gradient(to right, rgba($a[0], $a[1], 0, 0.7), rgba($a[2], $a[3], 0, 1));
 		background: -moz-linear-gradient(to right, rgba($a[0], $a[1], 0, 0.7), rgba($a[2], $a[3], 0, 1));
@@ -44,10 +59,14 @@ echo <<<_CSS
 _CSS;
 }
 
+/*
+ *	scoresToGradients takes an integer an returns an array for the function toGradientCss, currently
+ *	there are only 9 discrete warning levels hence the case statement 0 to 9.
+ */
 function scoresToGradients($int)
 {
 	// based on the integer fed to it, returns an array for color gradient: red, green, red, green
-	// the result being a progression from black to green to dark red, as the integer gets higher	
+	// the result being a progression from black to green to dark red, as the integer gets higher
 	switch($int){
 		case 0:
 			return array(0,0,0,0);
@@ -61,10 +80,10 @@ function scoresToGradients($int)
 		case 3:
 			return array(0, 255, 255, 255); // transition, green to yellow
 		break;
-		case 4:				// solid yellow	
+		case 4:				// solid yellow
 			return array(255, 255, 255, 255);
 		break;
-		case 5: 				// transition, yellow to red		
+		case 5: 				// transition, yellow to red
 			return array(255, 255, 255, 0);
 		break;
 		case 6:						// solid red
@@ -80,7 +99,11 @@ function scoresToGradients($int)
 		break;
 	}
 }
-// same logic with scores as above, only to apply css classes
+/*
+ *	@scoresToClasses has the same logic as @scoresToGradients
+ *	except that it produces css class names not the numerical
+ *	gradients used in those classes
+*/
 function scoresToClasses($int)
 {
 	switch($int){
@@ -124,9 +147,13 @@ function scoresToClasses($int)
 	<meta charset="utf-8" />
 <title>Habit Checker</title>
 <style>
+
 /*
- * Current Styling Rules are Static, that is 8 possible values only
+ * Generate the css for the urgency levels here. This will be the
+ * applications view.
+ *
  */
+
 .habit-complete { <?php toGradientCss(scoresToGradients(0)); ?> }
 .habit-green{ <?php toGradientCss(scoresToGradients(1)); ?> }
 .habit-yellow-green { <?php toGradientCss(scoresToGradients(2)); ?>}
@@ -137,6 +164,7 @@ function scoresToClasses($int)
 .habit-dark-red{ <?php toGradientCss(scoresToGradients(7)); ?> }
 .habit-nil{ background: black; }
 .habit-default { background: blue;}
+
 </style>
 </head>
 <body>
@@ -146,13 +174,14 @@ function scoresToClasses($int)
 	$i = 0;
 	foreach ($dailyHabits as $habit):
 		$urgency = $habit->dailyUrgency($habit->secondsSinceCompletion);
-		$habit_class = scoresToClasses($urgency); // urgency should be calculated, method needs refactoring
+		$habit_class = scoresToClasses($urgency);
 		$i++;
 		$lastCompleted = DateTime::CreateFromFormat('U', $habit->timestamp)->format('m/d H:i');
 		$currentDate = DateTime::CreateFromFormat('U', $habit->now)->format('m/d H:i');
 
 	// Table Rows give name of habit, its last completion, and the time the form has been generated
-	// Only Clientside JS can give when the item is actually submitted. 
+	// Only Clientside JS can give when the item is actually submitted.
+
 		echo <<<_TR
 		<tr>
 			<td class="$habit_class"> $habit->habitName</td>
@@ -166,8 +195,8 @@ function scoresToClasses($int)
 		</tr>
 
 _TR;
-endforeach;	
-	
+	endforeach;
+
 ?>
 	</table>
 </form>
