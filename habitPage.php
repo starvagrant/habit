@@ -30,6 +30,8 @@ catch (PDOException $e)
 	error_log($error);
 }
 
+unset($habitPDO);
+
 function toGradientCss(array $a) // four element numeric array $a[0] left red, $a[1] left green, $a[2] right red, $a[3] rigit green
 {	
 echo <<<_CSS

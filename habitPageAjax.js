@@ -4,9 +4,16 @@ var $form = $('form');
 var $table = $('table');
 
 $table.on('click', 'tr button', function(){
+	// grab data
 	var $input = $(this).parent().next().children('input'); // the actual input node
 	serializedData = $input.serialize();
 	console.log(serializedData);
+	var rightNow = new Date();
+	var timestamp = (rightNow.getTime() - rightNow.getMilliseconds()) / 1000;
+	serializedData += '&timestamp=' + timestamp;
+	console.log(serializedData);
+	// remove table row
+	$(this).parent().parent().hide();
 	$form.submit();
 });
 
@@ -17,7 +24,7 @@ $form.on('submit', null, serializedData, function(event) {	// on form submission
 	var request;
 
 	if (request) { request.abort(); } // abort if request is already present
-	// serialized data passed through function call
+
 	request = $.ajax({
 		url: "receiveAjaxFromPage.php",
 		type: "post",
@@ -28,6 +35,5 @@ $form.on('submit', null, serializedData, function(event) {	// on form submission
 	})
 	.fail(function(jqueryXHR, textStatus, errorThrown) {
 		console.log('fail!!'); console.log(textStatus); console.log(jqueryXHR);
-	})
-	.always(function(data_or_jqXHR, textStatus, jqXHR_or_errorThrown){ });
+	});
 }); // end on submit
