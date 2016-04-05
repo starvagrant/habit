@@ -171,7 +171,7 @@ endforeach;
 ?>
 	</table>
 </form>
-	<script src="jquery-1.11.0.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 	<script src="habitPageAjax.js"></script>
 </body>
 </html>
