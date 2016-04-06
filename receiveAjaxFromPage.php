@@ -5,7 +5,7 @@
 
 try // connect to database
 {
-	$dsn = "sqlite:/var/www/habit/.ht.habit.sqlite";
+	$dsn = "sqlite:/var/www/html/habit/.ht.habit.sqlite";
 	$pdo = new PDO($dsn);
 	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 }

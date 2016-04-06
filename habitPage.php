@@ -8,9 +8,9 @@ require 'habitClass.php';
 
 try
 {
-	$dsn = "sqlite:/var/www/habit/.ht.habit.sqlite";
-	$habitPDO = new PDO($dsn);
-	$habitPDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	$dsn = "sqlite:/var/www/html/habit/.ht.habit.sqlite";
+	$pdo = new PDO($dsn);
+	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 }
 catch (PDOException $e)
 {
@@ -20,7 +20,7 @@ catch (PDOException $e)
 try
 {
 	$sql = "SELECT * FROM habits";
-	$statement = $habitPDO->prepare($sql);
+	$statement = $pdo->prepare($sql);
 	if (!$statement->execute()) throw New PDOException("Statement Not Executed");
 	while ($result = $statement->fetch(PDO::FETCH_ASSOC))
 	{
@@ -34,7 +34,7 @@ catch (PDOException $e)
 	error_log($error);
 }
 
-unset($habitPDO);
+unset($pdo);
 
 /*
  *	The habits are represented as text with css gradient backgrounds.
